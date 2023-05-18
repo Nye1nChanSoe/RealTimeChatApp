@@ -1,16 +1,10 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './index.css'
+import { RouterProvider } from 'react-router-dom';
+import router from './router';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <div className='container mx-auto max-w-lg p-2 text-center bg-rose-200'>
-      Hello World!
-    </div>
+    <RouterProvider router={ router } />
   );
-}
+};
 
-export default App
+export default App;
