@@ -9,6 +9,12 @@ class Conversation extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'title',
+    ];
+
+
 
     /** relations */
     public function owner()

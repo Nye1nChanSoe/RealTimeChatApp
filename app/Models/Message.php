@@ -10,6 +10,12 @@ class Message extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'conversation_id',
+        'user_id',
+        'content',
+    ];
+
     /**
      * Crypt::encryptString is used to encrypt the message string
      * It utilizes the OpenSSL library, including AES-256-CBC
@@ -29,7 +35,7 @@ class Message extends Model
      */
     public function getContentAttribute()
     {
-        return Crypt::decryptString($this->content);
+        return Crypt::decryptString($this->attributes['content']);
     }
 
     /** relations */
