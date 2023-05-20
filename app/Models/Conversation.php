@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
 
 class Conversation extends Model
 {
@@ -15,6 +16,18 @@ class Conversation extends Model
         'last_message',
     ];
 
+
+    /**
+     * @see \App\Models\Message
+     */
+    public function setLastMessageAttribute($lastMessage)
+    {
+        $this->attributes['last_message'] = Crypt::encryptString($lastMessage);
+    }
+    public function getLastMessageAttribute()
+    {
+        return Crypt::decryptString($this->attributes['last_message']);
+    }
 
 
     /** relations */

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ConversationController;
+use App\Http\Controllers\Api\MessageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-/** Conversation Resources */
+/** Protected Resources */
 Route::middleware('auth:sanctum')->group(function() {
-    // Route::apiResource('/conversations', '');
+    Route::apiResource('/conversations', ConversationController::class);
+    Route::apiResource('/conversations/{conversation:id}/messages', MessageController::class);
 });
