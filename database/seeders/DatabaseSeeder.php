@@ -96,7 +96,8 @@ class DatabaseSeeder extends Seeder
 
         foreach($this->conversations as $conversation)
         {
-            $convo = Conversation::create(['user_id' => $conversation['user_id'], 'title' => $conversation['title']]);
+            $lastMessage = end($conversation['messages'])['content'];
+            $convo = Conversation::create(['user_id' => $conversation['user_id'], 'title' => $conversation['title'], 'last_message' => $lastMessage]);
             $convo->users()->attach([$conversation['user_id'], $conversation['participant_id']]);
 
             foreach($conversation['messages'] as $message)

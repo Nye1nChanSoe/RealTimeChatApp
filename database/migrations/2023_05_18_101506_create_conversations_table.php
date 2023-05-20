@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');   // owner or admin of the chat
             $table->string('title');
+            $table->text('last_message')->nullable();   // last message of each conversation
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
