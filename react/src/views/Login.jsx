@@ -39,6 +39,16 @@ const Login = () => {
           setErrors({});
         }, 8000);
       }
+      if(response && response.status === 401) {
+        response.data.errors = {};
+        response.data.errors.email = ['Invalid email or password'];
+        response.data.errors.password = [];
+        clearTimeout(timeoutRef.current);
+        setErrors(response.data.errors);
+        timeoutRef.current = setTimeout(() => {
+          setErrors({});
+        }, 8000);
+      }
     }
   };
 

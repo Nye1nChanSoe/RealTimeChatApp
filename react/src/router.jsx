@@ -4,7 +4,7 @@ import GuestLayout from './layouts/GuestLayout';
 import Login from './views/Login';
 import Register from './views/Register';
 import PageNotFound from './views/PageNotFound';
-import Chats from './views/Chats';
+import Home from './views/Home';
 
 /**
  * Which page to render when '/' will be decided based on the user is authenticated or not
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/chats',
-        element: <Chats />
+        element: <Home />
       }
     ]
   },
