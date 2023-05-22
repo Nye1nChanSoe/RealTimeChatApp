@@ -1,27 +1,86 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HiOutlinePaperClip } from 'react-icons/hi';
 import { HiOutlineEmojiHappy } from 'react-icons/hi';
 import { HiOutlinePaperAirplane } from 'react-icons/hi';
+import axiosClient from '../axios-client';
+import { useParams } from 'react-router-dom';
+import { MoonLoader } from 'react-spinners';
 
-const MessageInput = () => {
-  const messageRef = useRef();
+const MessageInput = ({ messages, setMessages }) => {
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const sendMessage = () => {
-    console.log(messageRef.current.value);
+  const textAreaRef = useRef(null);
+  const {conversationId} = useParams();
+
+  useEffect(() => {
+    textAreaRef.current.focus();
+  }, [messages]);
+
+  const handleSendMessage = async () => {
     const payload = {
-      
+      'content': message,
     };
+
+    try {
+      setLoading(true);
+      const res = await axiosClient.post(`/conversations/${conversationId}/messages`, payload);
+      setLoading(false);
+      setMessage('');
+      const {data} = res.data;
+      setMessages([...messages, data]);
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  // Custom key events for textarea element
+  const handleKeyEvents = (e) => {
+    if(e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const handleChange = (e) => {
+    setMessage(e.currentTarget.value);
   }
 
   return (
     <div className="h-24">
       <div className='flex items-center px-6 h-full'>
-        <div className='relative w-full h-14'>
-          <textarea ref={ messageRef } placeholder="write something" className="w-full h-full resize-none pt-4 pl-2.5 pr-14 rounded-xl border border-gray-400 focus:outline-none"></textarea>
-          <button className='absolute right-2 top-1/2 -translate-y-1/2 bg-blue-200 rounded-xl px-2.5 py-2 hover:bg-blue-300' onClick={ sendMessage }>
-            <HiOutlinePaperAirplane className='w-5 h-5 rotate-45' />
-          </button>
+        <div 
+          className='relative w-full h-12 py-2.5 px-2 bg-white border drop-shadow-xl shadow-teal-600 rounded-xl'
+          style={{ transition: "height 0.3s ease" }}
+        >
+          <textarea
+            ref={ textAreaRef }
+            onKeyDown={ handleKeyEvents }
+            onChange={ handleChange }
+            placeholder='Write Something . . .'
+            className='resize-none h-full w-full pl-1.5 pr-7 overflow-hidden focus:outline-none'
+            value={ message }
+          />
+          {
+            loading
+            ? <div className="absolute right-2.5 bottom-3.5 h-6 cursor-pointer">
+                <MoonLoader
+                  loading={ loading }
+                  size={ 20 }
+                  color='dodgerBlue'
+                  speedMultiplier={ 0.8 }
+                />
+              </div>
+            : <button 
+                disabled={ !message }
+                onClick={ handleSendMessage }
+                className={`absolute right-2.5 bottom-3.5 h-6 ${ !message ? 'text-gray-400' : 'cursor-pointer hover:text-blue-500' }`}
+              >
+                <HiOutlinePaperAirplane className='w-5 h-5 rotate-45' />
+              </button>
+          }
         </div>
+
         <div className='flex items-center px-5 gap-x-5'>
           <HiOutlinePaperClip className='w-5 h-5'/>
           <HiOutlineEmojiHappy className='w-5 h-5'/>

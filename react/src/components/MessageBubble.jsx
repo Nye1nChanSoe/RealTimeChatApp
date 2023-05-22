@@ -4,8 +4,8 @@ const MessageBubble = ({ sender, message, isSelf }) => {
   const left = 'flex justify-start';
   const right = 'flex justify-end';
 
-  const selfMessage = 'max-w-lg p-4 my-1.5 bg-blue-500 text-white rounded-xl';
-  const otherMessage = 'max-w-lg p-4 my-1.5 bg-gray-100 text-black rounded-xl';
+  const selfMessage = 'max-w-lg p-3 my-1.5 bg-blue-500 text-white rounded-xl';
+  const otherMessage = 'max-w-lg p-3 my-1.5 bg-gray-100 text-black rounded-xl';
 
   return (
     <div className='w-full'>

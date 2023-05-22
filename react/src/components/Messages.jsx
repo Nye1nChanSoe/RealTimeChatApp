@@ -13,6 +13,7 @@ const Messages = () => {
   const {conversationId} = useParams();
 
   const cancelTokenSourceRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   useEffect(() => {
     if(conversationId) {
@@ -27,6 +28,14 @@ const Messages = () => {
     }
   }, [conversationId]);
 
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+       // * scrollTop: gets or sets the number pixels scrolled vertically
+       // * scrollHeight: height of an element including paddings, excluding borders and margin
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const fetchMessages = async () => {
     cancelTokenSourceRef.current = cancelPendingRequest();
     try {
@@ -36,7 +45,7 @@ const Messages = () => {
       });
       if(res) {
         const {data} = res.data;
-        console.log(data);
+        // console.log(data);
         setMessages(data);
       }
     } catch(error) {
@@ -53,7 +62,7 @@ const Messages = () => {
       });
       if(res) {
         const {data} = res.data;
-        console.log(data);
+        // console.log(data);
         setParticipants(data.participants);
       }
       setLoading(false);
@@ -65,7 +74,7 @@ const Messages = () => {
 
   return (
     <div>
-      <div className="overflow-y-auto px-6" style={{ height: 'calc(100vh - 160px)' }}>
+      <div ref={ messagesContainerRef } className="overflow-y-auto px-6 scroll-smooth" style={{ height: 'calc(100vh - 160px)' }}>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
           <PuffLoader
             loading={loading}
@@ -80,9 +89,9 @@ const Messages = () => {
           !loading ?
           <div>
             <ChatHeader participants={ participants } />
-            { messages.map((msg) => 
-              <MessageBubble 
-                key={ msg.message_id }
+            { messages.map((msg, index) =>
+              <MessageBubble
+                key={ index }
                 sender={ msg.sender }
                 message={ msg.content }
                 isSelf={ msg.type === 'self' }
@@ -92,7 +101,10 @@ const Messages = () => {
           : ''
         }
       </div>
-      <MessageInput />
+      <MessageInput 
+        messages={ messages } 
+        setMessages={ setMessages } 
+      />
     </div>
   )
 };

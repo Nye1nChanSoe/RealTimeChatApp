@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { FadeLoader } from 'react-spinners';
 import axiosClient, { cancelPendingRequest } from '../axios-client';
 import Conversation from './Conversation';
-import { useConversationContext } from '../contexts/ConversationContext';
 import { Link, useParams } from 'react-router-dom';
 
 const Conversations = () => {
@@ -50,8 +49,8 @@ const Conversations = () => {
       </div>
       <div>
         {
-          chats.map((chat) =>
-          <Link key={ chat.conversation_id } to={`/chats/${chat.conversation_id}`}>
+          chats.map((chat, index) =>
+          <Link key={ index } to={`/chats/${chat.conversation_id}`}>
             <Conversation
               id={ chat.conversation_id }
               conversation={ chat.conversation }
