@@ -1,78 +1,33 @@
-import ChatHeader from "./ChatHeader";
-import MessageBubble from "./MessageBubble";
-import MessageInput from "./MessageInput";
+import PropTypes from 'prop-types';
+import { diffForHumans } from '../helpers';
+import { useParams } from 'react-router-dom';
 
-const Conversation = () => {
-  const messages = [
-    {
-      id: 1,
-      name: 'Nyein Chan Soe',
-      message: 'Hi',
-      timestamp: 'Mon',
-      sender: 'self',
-    },
-    {
-      id: 2,
-      name: 'John Doe',
-      message: 'Hello, what\'s up',
-      timestamp: 'Mon',
-      sender: 'other',
-    },
-    {
-      id: 3,
-      name: 'Nyein Chan Soe',
-      message: 'Fine!! How you doin',
-      timestamp: 'Mon',
-      sender: 'self',
-    },
-    {
-      id: 4,
-      name: 'Nyein Chan Soe',
-      message: 'And I want to inform you that we have a onboarding meeting on Wednesday. After that we can grap something',
-      timestamp: 'Mon',
-      sender: 'self',
-    },
-    {
-      id: 5,
-      name: 'Nyein Chan Soe',
-      message: 'Make sure you are free on that day!',
-      timestamp: 'Mon',
-      sender: 'self',
-    },
-    {
-      id: 6,
-      name: 'John Doe',
-      message: 'Oh really, I am glad that you informed me.',
-      timestamp: 'Mon',
-      sender: 'other',
-    },
-    {
-      id: 7,
-      name: 'John Doe',
-      message: 'Alright, see you on Wednesday mate',
-      timestamp: 'Mon',
-      sender: 'other',
-    },
-    {
-      id: 8,
-      name: 'Nyein Chan Soe',
-      message: 'Sure',
-      timestamp: 'Mon',
-      sender: 'self',
-    },
-  ];
+const Conversation = ({ id,  conversation, participants }) => {
+  const {conversationId} = useParams();
+
+  // cut the first participant AKA you
+  const names = participants.slice(1).map((person) => `${person.firstname} ${person.lastname}`);
 
   return (
-    <div>
-      <div className="overflow-y-auto px-6" style={{ height: 'calc(100vh - 160px)' }}>
-      <ChatHeader />
-        {
-          messages.map((msg) => <MessageBubble name={ msg.name } message={ msg.message } isSelf={ msg.sender === 'self' } />)
-        }
+    <div className={`flex items-center space-x-3 px-6 py-4 cursor-pointer ${ conversationId == id ? 'bg-gray-100' : '' } hover:bg-gray-100`} >
+      <div className='shrink-0 w-12 h-12 rounded-full overflow-hidden bg-gray-100'>
+        <img src="" alt="" />
       </div>
-      <MessageInput />
+      <div className='flex-1 overflow-hidden'>
+        <h1 className='font-semibold'>{ names.join(", ") }</h1>
+        <p className='truncate'>{ conversation.last_message }</p>
+      </div>
+      <div className='self-start'>
+        <time className='text-sm text-gray-500'>{ diffForHumans(conversation.updated_at) }</time>
+      </div>
     </div>
-  )
+  );
+};
+
+Conversation.propTypes = {
+  id: PropTypes.number.isRequired,
+  conversation: PropTypes.object.isRequired,
+  participants: PropTypes.array.isRequired,
 };
 
 export default Conversation;

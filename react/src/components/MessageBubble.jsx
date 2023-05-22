@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const MessageBubble = ({ name, message, isSelf }) => {
+const MessageBubble = ({ sender, message, isSelf }) => {
   const left = 'flex justify-start';
   const right = 'flex justify-end';
 
@@ -17,7 +17,7 @@ const MessageBubble = ({ name, message, isSelf }) => {
 };
 
 MessageBubble.propTypes = {
-  name: PropTypes.string.isRequired,
+  sender: PropTypes.string.isRequired,
   message: PropTypes.string.isRequired,
   isSelf: PropTypes.bool.isRequired,
 };

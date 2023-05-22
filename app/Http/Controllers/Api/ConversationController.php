@@ -7,6 +7,8 @@ use App\Models\Conversation;
 use App\Http\Requests\StoreConversationRequest;
 use App\Http\Requests\UpdateConversationRequest;
 use App\Http\Resources\ConversationWithParticipantsResource;
+use App\Http\Resources\ParticipantResource;
+use App\Http\Resources\UserResource;
 
 class ConversationController extends Controller
 {
@@ -45,5 +47,14 @@ class ConversationController extends Controller
     {
         $conversation->delete();
         return response("", 204);
+    }
+
+    /**
+     * Participants of this conversation
+     * String of comma separated names
+     */
+    public function participants(Conversation $conversation)
+    {
+        return new ParticipantResource($conversation);
     }
 }

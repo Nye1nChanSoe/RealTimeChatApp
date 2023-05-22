@@ -17,6 +17,7 @@ class MessageResource extends JsonResource
         return [
             'message_id' => $this->id,
             'sender' => $this->user->fullname,
+            'type' => $this->user->id == auth()->id() ? 'self' : 'other',
             'content' => $this->content,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at

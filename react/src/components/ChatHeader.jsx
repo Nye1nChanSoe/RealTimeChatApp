@@ -3,7 +3,7 @@ import { HiOutlineVideoCamera } from 'react-icons/hi';
 import { HiOutlinePlusSm } from 'react-icons/hi';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 
-const ChatHeader =({ data }) => {
+const ChatHeader = ({ participants }) => {
   return (
     <header className='flex items-center justify-between h-20 sticky top-0 z-10 bg-white'>
       <div className='flex items-center gap-x-5'>
@@ -11,7 +11,7 @@ const ChatHeader =({ data }) => {
           <img src="" alt="" />
         </div>
         <div className='w-52'>
-          <h1 className='truncate'>Kyle, John Doe, Austin</h1>
+          <h1 className='truncate'>{ participants }</h1>
         </div>
       </div>
       <div className='flex items-center gap-x-5'>
@@ -24,7 +24,7 @@ const ChatHeader =({ data }) => {
 };
 
 ChatHeader.propTypes = {
-  data: PropTypes.object.isRequired,
-};
+  participants: PropTypes.string.isRequired,
+}
 
 export default ChatHeader;

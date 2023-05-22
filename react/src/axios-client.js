@@ -19,6 +19,9 @@ axiosClient.interceptors.response.use((response) => {
   return response;
 }, (reject) => {
   try {
+    if(axios.isCancel(reject)) {
+      return;
+    }
     // destructure the actual response coming from the server
     const {response} = reject;
     // if the user is unauthorized, or if the token is invalid for some reason
@@ -32,4 +35,5 @@ axiosClient.interceptors.response.use((response) => {
   throw reject;
 });
 
+export const cancelPendingRequest = () => axios.CancelToken.source();
 export default axiosClient;
