@@ -64,11 +64,11 @@ const Login = () => {
         <h2 className="text-center text-3xl text-gray-600">Talkiverse</h2>
         <form onSubmit={ handleSubmit }>
           <div className="relative my-5 px-2">
-            <input ref={ emailRef } type="email" placeholder={errors.email ? errors.email[0] : 'Email'} className={`border-b w-full pl-10 pr-2 py-2 ${errors.email ? 'border-b-red-400 placeholder:text-red-300' : 'border-b-slate-300'} bg-[#f0f0f0] text-gray-600 focus:outline-none focus:border-b-blue-400`} />
+            <input ref={ emailRef } type="email" placeholder={errors.email ? errors.email[0] : 'Email'} className={`border-b w-full pl-10 pr-2 py-2 ${errors.email ? 'border-b-red-400 placeholder:text-red-300' : 'border-b-slate-300'} bg-transparent text-gray-600 focus:outline-none focus:border-b-blue-400`} />
             <HiOutlineMail className='text-slate-300 w-6 h-6 absolute top-2'/>
           </div>
           <div className="relative my-5 px-2">
-            <input ref={ passwordRef } type="password" placeholder={errors.password ? errors.password[0] : 'Password'} className={`border-b w-full pl-10 pr-2 py-2 ${errors.password ? 'border-b-red-400 placeholder:text-red-300' : 'border-b-slate-300'} bg-[#f0f0f0] text-gray-600 focus:outline-none focus:border-b-blue-400`} />
+            <input ref={ passwordRef } type="password" placeholder={errors.password ? errors.password[0] : 'Password'} className={`border-b w-full pl-10 pr-2 py-2 ${errors.password ? 'border-b-red-400 placeholder:text-red-300' : 'border-b-slate-300'} bg-transparent text-gray-600 focus:outline-none focus:border-b-blue-400`} />
             <HiOutlineKey className='text-slate-300 w-6 h-6 absolute top-2'/>
           </div>
           {

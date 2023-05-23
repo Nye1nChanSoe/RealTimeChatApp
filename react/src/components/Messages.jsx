@@ -6,25 +6,37 @@ import ChatHeader from "./ChatHeader";
 import { PuffLoader } from 'react-spinners';
 import { useParams } from "react-router-dom";
 import { useMessageContext } from "../contexts/MessageContext";
+import { useUtilityContext } from "../contexts/UtilityContext";
 
 const Messages = () => {
   const {messages, setMessages} = useMessageContext();
+  const {setNotification} = useUtilityContext();
   const [participants, setParticipants] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
+
   const {conversationId} = useParams();
 
+  const intervalIdRef = useRef(null);
   const cancelTokenSourceRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
   useEffect(() => {
+    setIsEmpty(true);
     if(conversationId) {
-      fetchMessages();
+      // load the messages for each conversation and set loading to true
+      initialize();
       fetchParticipants();
+
+      pollMessageUpdates();
     }
 
     // When the component is unmounted the clean up functions specified 
     // in the return statement will be invoked 
     return () => {
+      if(intervalIdRef.current) {
+        clearInterval(intervalIdRef.current);
+      }
       if(cancelTokenSourceRef.current) {
         cancelTokenSourceRef.current.cancel('Request canceled');
       }
@@ -38,12 +50,42 @@ const Messages = () => {
        // * scrollHeight: height of an element including paddings, excluding borders and margin
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
-  }, [loading, messages]);
+  }, [loading]);
+
+  const pollMessageUpdates = () => {
+    if(conversationId) {
+      intervalIdRef.current = setInterval(() => {
+        fetchMessages();
+      }, 5000);
+    }
+  };
 
   const fetchMessages = async () => {
     cancelTokenSourceRef.current = cancelPendingRequest();
     try {
-      setLoading(true);
+      const res = await axiosClient.get(`/conversations/${conversationId}/messages`, {
+        cancelToken: cancelTokenSourceRef.current.token,
+      });
+      if(res) {
+        const {data} = res.data;
+        setMessages(data);
+        setIsEmpty(!data.length);
+      }
+    } catch(error) {
+      console.log(error);
+      const {response} = error;
+      if(response && response.status === 404) {
+        setNotification(response.data.message);
+      } else {
+        setNotification(error.message);
+      }
+    }
+  };
+
+  const initialize = async () => {
+    setLoading(true);
+    cancelTokenSourceRef.current = cancelPendingRequest();
+    try {
       const res = await axiosClient.get(`/conversations/${conversationId}/messages`, {
         cancelToken: cancelTokenSourceRef.current.token,
       });
@@ -51,10 +93,16 @@ const Messages = () => {
         const {data} = res.data;
         setMessages(data);
         // console.log(data);
+        setIsEmpty(data.length === 0);
       }
     } catch(error) {
       console.log(error);
-      setLoading(false);
+      const {response} = error;
+      if(response && response.status === 404) {
+        setNotification(response.data.message);
+      } else {
+        setNotification(error.message);
+      }
     }
   };
 
@@ -67,8 +115,8 @@ const Messages = () => {
         const {data} = res.data;
         // console.log(data);
         setParticipants(data.participants);
+        setLoading(false);
       }
-      setLoading(false);
     } catch(error) {
       console.error(error);
       setLoading(false);
@@ -77,8 +125,34 @@ const Messages = () => {
 
   return (
     <div>
-      <div ref={ messagesContainerRef } className="overflow-y-auto px-6 scroll-smooth" style={{ height: 'calc(100vh - 160px)' }}>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2">
+      <div
+        ref={ messagesContainerRef } 
+        className="overflow-y-auto scroll-smooth"
+        style={{ height: 'calc(100vh - 96px)' }}
+      >
+        {
+          !loading &&
+          <div>
+            <ChatHeader participants={ participants } />
+            { messages.map((msg, index) =>
+                <MessageBubble
+                key={ index }
+                message={ msg }
+                isSelf={ msg.type === 'self' }
+                />
+              ) 
+            }
+          </div>
+        }
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          {/* if it's not loading (done initializing) and still got empty result */}
+          { (!loading && isEmpty) && 
+            <div className="flex flex-col items-center gap-y-2">
+              <p className="text-gray-500">Select a conversation</p>
+            </div>
+          }
+
+          {/* Shows every time the user switch to another conversation  */}
           <PuffLoader
             loading={loading}
             height={8}
@@ -88,20 +162,6 @@ const Messages = () => {
             color='dodgerBlue'
           />
         </div>
-        {
-          !loading ?
-          <div>
-            <ChatHeader participants={ participants } />
-            { messages.map((msg, index) =>
-              <MessageBubble
-                key={ index }
-                message={ msg }
-                isSelf={ msg.type === 'self' }
-              />
-            ) }
-          </div>
-          : ''
-        }
       </div>
       <MessageInput />
     </div>

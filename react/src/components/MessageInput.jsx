@@ -6,6 +6,7 @@ import axiosClient from '../axios-client';
 import { useParams } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 import { useMessageContext } from '../contexts/MessageContext';
+import { useUtilityContext } from '../contexts/UtilityContext';
 
 const MessageInput = () => {
   const {messages, setMessages} = useMessageContext();
@@ -15,24 +16,31 @@ const MessageInput = () => {
   const textAreaRef = useRef(null);
   const {conversationId} = useParams();
 
+  const {notification, setNotification} = useUtilityContext();
+
   useEffect(() => {
     textAreaRef.current.focus();
-  }, [messages]);
+  }, [messages, notification]);
 
   const handleSendMessage = async () => {
     const payload = {
       'content': message,
     };
 
+    setLoading(true);
     try {
-      setLoading(true);
       setMessage('');
       const res = await axiosClient.post(`/conversations/${conversationId}/messages`, payload);
-      setLoading(false);
       const {data} = res.data;
       setMessages([...messages, data]);
+      setLoading(false);
     } catch(error) {
-      console.error(error);
+      if(error && error.response.status === 404) {
+        setNotification('Select a conversation to send messages');
+      } else {
+        setNotification(error.message);
+      }
+      setLoading(false);
     }
   }
 
@@ -40,7 +48,9 @@ const MessageInput = () => {
   const handleKeyEvents = (e) => {
     if(e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSendMessage();
+      if(message) {
+        handleSendMessage();
+      }
     }
   };
 

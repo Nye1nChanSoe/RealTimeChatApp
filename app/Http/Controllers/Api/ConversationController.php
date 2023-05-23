@@ -14,11 +14,9 @@ class ConversationController extends Controller
 {
     public function index()
     {
-        $conversations = Conversation::with('users')
-            ->where('user_id', auth()->id())
-            ->get();
-
-        return ConversationWithParticipantsResource::collection($conversations);
+        /** @var User $user */
+        $user =auth()->user();
+        return ConversationWithParticipantsResource::collection($user->conversations()->with('users')->get());
     }
 
     public function store(StoreConversationRequest $request)

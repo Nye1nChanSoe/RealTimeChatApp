@@ -9,12 +9,12 @@ export function diffForHumans(date)
   if(minutes < 1) {
     return 'Just now';
   } else if (minutes === 1) {
-    return '1 minute ago';
+    return '1m';
   } else if (minutes < 60) {
-    return `${minutes} minutes`;
+    return `${minutes}m`;
   } else if (minutes < 1440) {
-    return `${Math.floor(minutes / 60)} hours`;
+    return `${Math.floor(minutes / 60)}h`;
   } else {
-    return `${Math.floor(minutes / 1440)} days`;
+    return `${Math.floor(minutes / 1440)}d`;
   }
 }

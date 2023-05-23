@@ -15,7 +15,7 @@ const Dropdown = forwardRef(({ position, items }, ref) => {
           <div
             key={ index }
             onClick={ (e) => values[index](e) }
-            className='px-2 py-1 w-full text-black cursor-pointer text-sm hover:bg-gray-200'
+            className='px-2 py-1 w-full cursor-pointer text-gray-600 text-sm hover:bg-gray-50'
           >
               { name.charAt(0).toUpperCase() + name.slice(1) }
           </div>

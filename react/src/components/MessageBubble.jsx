@@ -4,19 +4,21 @@ import Dropdown from './Dropdown';
 import { useMessageContext } from '../contexts/MessageContext';
 import axiosClient from '../axios-client';
 import { useParams } from 'react-router-dom';
+import { useUtilityContext } from '../contexts/UtilityContext';
 
 const MessageBubble = ({ message, isSelf }) => {
   const {messages, setMessages} = useMessageContext();
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const dropdownRef = useRef(null);
   const {conversationId} = useParams();
+  const dropdownRef = useRef(null);
 
   const left = 'flex justify-start';
   const right = 'flex justify-end';
-
   const selfMessage = `max-w-lg p-3 cursor-pointer my-1.5 bg-blue-500 text-white rounded-xl`;
   const otherMessage = 'max-w-lg p-3 cursor-pointer my-1.5 bg-gray-100 text-black rounded-xl';
+
+  const {setNotification} = useUtilityContext();
 
   useEffect(() => {
     document.addEventListener('click', onClickOutside);
@@ -27,10 +29,11 @@ const MessageBubble = ({ message, isSelf }) => {
 
   const onDelete = async (e) => {
     try {
-      setMessages(messages.filter((msg) => msg.message_id !== message.message_id));
       setShowDropdown(false);
       await axiosClient.delete(`/conversations/${conversationId}/messages/${message.message_id}`);
+      setMessages(messages.filter((msg) => msg.message_id !== message.message_id));
     } catch(error) {
+      setNotification(error.message);
       console.log(error);
     }
   };
@@ -42,7 +45,6 @@ const MessageBubble = ({ message, isSelf }) => {
   };
 
   const handleDropdown = (e) => {
-    e.preventDefault();
     setShowDropdown(true);
   };
 
@@ -51,7 +53,7 @@ const MessageBubble = ({ message, isSelf }) => {
   };
 
   return (
-    <div className='w-full relative'>
+    <div className='w-full px-6 relative'>
       <div className={ isSelf ? right : left }>
         <p
           onDoubleClick={ (e) => isSelf ? handleDropdown(e) : '' }
@@ -62,7 +64,7 @@ const MessageBubble = ({ message, isSelf }) => {
       </div>
       {
         showDropdown
-        ? <Dropdown ref={ dropdownRef } position="right-0" items={ dropdownObject } />
+        ? <Dropdown ref={ dropdownRef } position="right-6" items={ dropdownObject } />
         : ''
       }
     </div>

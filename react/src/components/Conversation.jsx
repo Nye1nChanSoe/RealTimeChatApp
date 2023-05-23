@@ -1,82 +1,43 @@
 import PropTypes from 'prop-types';
 import { diffForHumans } from '../helpers';
 import { useParams } from 'react-router-dom';
-import axiosClient, { cancelPendingRequest } from '../axios-client';
-import { useEffect, useRef, useState } from 'react';
+import { useUtilityContext } from '../contexts/UtilityContext';
+import { useEffect } from 'react';
 
-const Conversation = ({ id,  conversation, participants }) => {
-  const [lastMessge, setLastMessage] = useState('');
-  const [names, setNames] = useState('');
+const Conversation = ({ chat }) => {
   const {conversationId} = useParams();
-
-  const intervalIdRef = useRef(null);
-  const cancelTokenSourceRef = useRef(null);
+  const {setSelectedConversation} = useUtilityContext();
 
   useEffect(() => {
-    setLastMessage(conversation.last_message);
-    // cut the first participant AKA you
-    setNames(participants.slice(1).map((person) => `${person.firstname} ${person.lastname}`).join(', '));
-  }, []);
-
-  useEffect(() => {
-    pollConversationUpdates();  // every 5s
-
-    return () => {
-      if(intervalIdRef.current) {
-        clearInterval(intervalIdRef.current);
-      }
-      if(cancelTokenSourceRef.current) {
-        cancelTokenSourceRef.current.cancel('Request canceled');
-      }
+    if(conversationId) {
+      setSelectedConversation(conversationId);
     }
   }, [conversationId]);
 
-
-  // preiodic polling to get latest conversation data
-  const pollConversationUpdates = async () => {
-    if( conversationId === id) {
-      intervalIdRef.current = setInterval(() => {
-        // console.log('Check Leaks!');
-        fetchLastMessageFromConversation();
-      }, 5000);
-    }
-  };
-
-  const fetchLastMessageFromConversation = async () => {
-    cancelTokenSourceRef.current = cancelPendingRequest();
-    try {
-      const res = await axiosClient.get(`/conversations/${conversationId}`, {
-        cancelToken: cancelTokenSourceRef.current.token,
-      });
-      if(res) {
-        const {data} = res.data;
-        setLastMessage(data.conversation.last_message);
-      }
-    } catch(error) {
-      console.error(error);
-    }
-  };
-
   return (
-    <div className={`flex items-center space-x-3 px-6 py-4 cursor-pointer ${ conversationId === id ? 'bg-gray-100' : '' } hover:bg-gray-100`} >
+    <div 
+      className={`flex items-center space-x-3 px-6 py-4 text-sm cursor-pointer
+      ${ conversationId === chat.conversation_id ? 'bg-gray-50' : 'hover:bg-gray-200' }`}
+    >
       <div className='shrink-0 w-12 h-12 rounded-full overflow-hidden bg-gray-100'>
         <img src="" alt="" />
       </div>
       <div className='flex-1 overflow-hidden'>
-        <h1 className='font-semibold'>{ names }</h1>
-        <p className='truncate'>{ lastMessge }</p>
+        <h1 className='font-semibold text-base truncate mb-1'>
+          {/* slice(1) to cut out the first participant AKA auth user name */}
+          { chat.participants.slice(1).map((person) => `${person.firstname} ${person.lastname}`).join(', ') }
+        </h1>
+        <p className='truncate'>{ chat.conversation.last_message }</p>
       </div>
-      <div className='self-start'>
-        <time className='text-sm text-gray-500'>{ diffForHumans(conversation.updated_at) }</time>
+      <div className='self-center w-14 text-right'>
+        <time className='text-gray-500 text-xs'>{ diffForHumans(chat.conversation.updated_at) }</time>
       </div>
     </div>
   );
 };
 
 Conversation.propTypes = {
-  id: PropTypes.string.isRequired,
-  conversation: PropTypes.object.isRequired,
-  participants: PropTypes.array.isRequired,
+  chat: PropTypes.object.isRequired,
 };
 
 export default Conversation;

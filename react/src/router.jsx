@@ -21,11 +21,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/chats',
-        element: <Home key="noConversation" />
+        element: <Home />
       },
       {
         path: '/chats/:conversationId',
-        element: <Home key="conversation" />
+        element: <Home />
       }
     ]
   },

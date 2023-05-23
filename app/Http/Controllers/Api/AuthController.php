@@ -44,7 +44,10 @@ class AuthController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
-        $user->currentAccessToken()->delete();
+
+        /** @var $token */
+        $token = $user->currentAccessToken();
+        $token->delete();
         return response('', 204);
     }
 }

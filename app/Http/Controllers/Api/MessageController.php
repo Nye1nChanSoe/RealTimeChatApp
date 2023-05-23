@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\MessageCreated;
+use App\Events\MessageDeleted;
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Http\Requests\StoreMessageRequest;
@@ -19,6 +20,14 @@ class MessageController extends Controller
 {
     public function index(Conversation $conversation)
     {
+        /** @var User user */
+        $user = auth()->user();
+
+        if(!$user->conversations()->where('conversations.id', $conversation->id)->exists())
+        {
+            return response()->json(['message' => 'Conversation not found'], 404);
+        }
+
         $messages = Message::with('user')
             ->where('conversation_id', $conversation->id)
             ->get();
@@ -35,7 +44,7 @@ class MessageController extends Controller
         $message = Message::create($data);
 
         // dispatch message event to trigger the corresponding event listener
-        event(new MessageCreated($message->id, $message->content, $conversation->id));
+        event(new MessageCreated($message->id, $message->content, $conversation->id, $message->created_at, $message->updated_at));
 
         return new MessageResource($message);
     }
@@ -55,7 +64,12 @@ class MessageController extends Controller
 
     public function destroy(Conversation $conversation, Message $message)
     {
+        $updated_at = $message->updated_at;
         $message->delete();
+
+        $lastMessage = Message::where('conversation_id', $conversation->id)->latest()->first();
+        event(new MessageDeleted($lastMessage->id, $lastMessage->content, $conversation->id, $message->created_at, $updated_at));
+
         return response("", 204);
     }
 }

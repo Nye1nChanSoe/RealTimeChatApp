@@ -9,7 +9,7 @@ const GuestLayout = () => {
   }
 
   return (
-    <div className='flex justify-center items-center h-screen bg-[#f0f0f0]'>
+    <div className='flex justify-center items-center h-screen'>
       <main>
         <Outlet />
       </main>
