@@ -5,8 +5,10 @@ import { HiOutlinePaperAirplane } from 'react-icons/hi';
 import axiosClient from '../axios-client';
 import { useParams } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
+import { useMessageContext } from '../contexts/MessageContext';
 
-const MessageInput = ({ messages, setMessages }) => {
+const MessageInput = () => {
+  const {messages, setMessages} = useMessageContext();
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -24,9 +26,9 @@ const MessageInput = ({ messages, setMessages }) => {
 
     try {
       setLoading(true);
+      setMessage('');
       const res = await axiosClient.post(`/conversations/${conversationId}/messages`, payload);
       setLoading(false);
-      setMessage('');
       const {data} = res.data;
       setMessages([...messages, data]);
     } catch(error) {

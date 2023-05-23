@@ -5,9 +5,10 @@ import MessageInput from "./MessageInput";
 import ChatHeader from "./ChatHeader";
 import { PuffLoader } from 'react-spinners';
 import { useParams } from "react-router-dom";
+import { useMessageContext } from "../contexts/MessageContext";
 
 const Messages = () => {
-  const [messages, setMessages] = useState([]);
+  const {messages, setMessages} = useMessageContext();
   const [participants, setParticipants] = useState('');
   const [loading, setLoading] = useState(true);
   const {conversationId} = useParams();
@@ -21,6 +22,8 @@ const Messages = () => {
       fetchParticipants();
     }
 
+    // When the component is unmounted the clean up functions specified 
+    // in the return statement will be invoked 
     return () => {
       if(cancelTokenSourceRef.current) {
         cancelTokenSourceRef.current.cancel('Request canceled');
@@ -29,12 +32,13 @@ const Messages = () => {
   }, [conversationId]);
 
   useEffect(() => {
+    console.count('useEffect'); // => 3 times getting executed
     if (messagesContainerRef.current) {
        // * scrollTop: gets or sets the number pixels scrolled vertically
        // * scrollHeight: height of an element including paddings, excluding borders and margin
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [loading, messages]);
 
   const fetchMessages = async () => {
     cancelTokenSourceRef.current = cancelPendingRequest();
@@ -45,8 +49,8 @@ const Messages = () => {
       });
       if(res) {
         const {data} = res.data;
-        // console.log(data);
         setMessages(data);
+        // console.log(data);
       }
     } catch(error) {
       console.log(error);
@@ -56,7 +60,6 @@ const Messages = () => {
 
   const fetchParticipants = async () => {
     try {
-      setLoading(true);
       const res = await axiosClient.get(`/conversations/${conversationId}/participants`, {
         cancelToken: cancelTokenSourceRef.current.token,
       });
@@ -92,8 +95,7 @@ const Messages = () => {
             { messages.map((msg, index) =>
               <MessageBubble
                 key={ index }
-                sender={ msg.sender }
-                message={ msg.content }
+                message={ msg }
                 isSelf={ msg.type === 'self' }
               />
             ) }
@@ -101,10 +103,7 @@ const Messages = () => {
           : ''
         }
       </div>
-      <MessageInput 
-        messages={ messages } 
-        setMessages={ setMessages } 
-      />
+      <MessageInput />
     </div>
   )
 };

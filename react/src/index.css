@@ -47,3 +47,13 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #b8b8b8;
 }
+
+.dropdown-arrow::before {
+    content: "";
+    position: absolute;
+    top: -13px;
+    right: 10%;
+    border-width: 7px;
+    border-style: solid;
+    border-color: transparent transparent #d5d5d5 transparent; /* Arrow color */
+  }
