@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\MessageCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Conversation;
 use App\Http\Requests\StoreMessageRequest;
@@ -32,6 +33,10 @@ class MessageController extends Controller
         $data['user_id'] = auth()->id();
 
         $message = Message::create($data);
+
+        // dispatch message event to trigger the corresponding event listener
+        event(new MessageCreated($message->id, $message->content, $conversation->id));
+
         return new MessageResource($message);
     }
 
