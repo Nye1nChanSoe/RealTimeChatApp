@@ -6,6 +6,7 @@ const MessageContext = createContext({
 });
 
 export const MessageContextProvider = ({ children }) => {
+  // store the messages of a single conversation
   const [messages, setMessages] = useState([]);
 
   return (

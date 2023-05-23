@@ -32,7 +32,7 @@ const Messages = () => {
   }, [conversationId]);
 
   useEffect(() => {
-    console.count('useEffect'); // => 3 times getting executed
+    // console.count('useEffect'); // => 3 times getting executed
     if (messagesContainerRef.current) {
        // * scrollTop: gets or sets the number pixels scrolled vertically
        // * scrollHeight: height of an element including paddings, excluding borders and margin
