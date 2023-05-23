@@ -10,7 +10,7 @@ class ConversationMessageUserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'conversation_id' => $this->id,
+            'conversation_id' => (string)$this->id,
             'conversation' => [
                 'title' => $this->title,
                 'last_message' => $this->last_message,

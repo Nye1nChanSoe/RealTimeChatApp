@@ -1,11 +1,11 @@
 {
     "data": {
-        "conversation_id": 1,
+        "conversation_id": "1",
         "conversation": {
             "title": "Conversation Ttile",
             "last_message": "Last message of the conversation",
             "owner": {
-                "user_id": 1,
+                "user_id": "1",
                 "firstname": "Nyein Chan",
                 "lastname": "Soe",
                 "created_at": "2023-05-20 11:51:11",
@@ -15,14 +15,14 @@
             "updated_at": "2023-05-20 11:51:11",
             "participants": [
                 {
-                    "user_id": 1,
+                    "user_id": "1",
                     "firstname": "Nyein Chan",
                     "lastname": "Soe",
                     "created_at": "2023-05-20 11:51:11",
                     "updated_at": "2023-05-20 11:51:11"
                 },
                 {
-                    "user_id": 2,
+                    "user_id": "2",
                     "firstname": "John",
                     "lastname": "Doe",
                     "created_at": "2023-05-20 11:51:11",
