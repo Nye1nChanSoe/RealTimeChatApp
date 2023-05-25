@@ -7,6 +7,7 @@ import { PuffLoader } from 'react-spinners';
 import { useParams } from "react-router-dom";
 import { useMessageContext } from "../contexts/MessageContext";
 import { useUtilityContext } from "../contexts/UtilityContext";
+import { isEqual } from 'lodash';
 
 const Messages = () => {
   const {messages, setMessages} = useMessageContext();
@@ -17,6 +18,7 @@ const Messages = () => {
 
   const {conversationId} = useParams();
 
+  const messagesRef = useRef([]);
   const intervalIdRef = useRef(null);
   const cancelTokenSourceRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -44,13 +46,12 @@ const Messages = () => {
   }, [conversationId]);
 
   useEffect(() => {
-    // console.count('useEffect'); // => 3 times getting executed
     if (messagesContainerRef.current) {
        // * scrollTop: gets or sets the number pixels scrolled vertically
        // * scrollHeight: height of an element including paddings, excluding borders and margin
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
-  }, [loading]);
+  }, [messages, loading]);
 
   const pollMessageUpdates = () => {
     if(conversationId) {
@@ -68,8 +69,12 @@ const Messages = () => {
       });
       if(res) {
         const {data} = res.data;
-        setMessages(data);
-        setIsEmpty(!data.length);
+        // only update the messages if it fetched messages are different from previous messages
+        if(!isEqual(data, messagesRef.current)) {
+          setMessages(data);
+          setIsEmpty(!data.length);
+          messagesRef.current = data;
+        }
       }
     } catch(error) {
       console.log(error);
@@ -94,6 +99,7 @@ const Messages = () => {
         setMessages(data);
         // console.log(data);
         setIsEmpty(data.length === 0);
+        messagesRef.current = data;
       }
     } catch(error) {
       console.log(error);

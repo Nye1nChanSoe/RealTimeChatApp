@@ -4,6 +4,7 @@ import axiosClient, { cancelPendingRequest } from '../axios-client';
 import Conversation from './Conversation';
 import { Link } from 'react-router-dom';
 import { useUtilityContext } from '../contexts/UtilityContext';
+import { isEqual } from 'lodash';
 
 const Conversations = () => {
   const [chats, setChats] = useState([]);
@@ -12,6 +13,7 @@ const Conversations = () => {
 
   const intervalIdRef = useRef(null);
   const cancelTokenSourceRef = useRef(null);
+  const chatsRef = useRef([]);
   const {setNotification} = useUtilityContext();
 
   useEffect(() => {
@@ -53,6 +55,7 @@ const Conversations = () => {
         setChats(data);
         setLoading(false);
         setIsEmpty(data.length === 0);
+        chatsRef.current = data;
       }
     } catch(error) {
       setNotification(error.message);
@@ -70,7 +73,10 @@ const Conversations = () => {
       // API responses are also prefixed with 'data'
       if(res) {
         const {data} = res.data;
-        setChats(data);
+        if(!isEqual(data, chatsRef.current)) {
+          setChats(data);
+          chatsRef.current = data;
+        }
       }
     } catch(error) {
       setNotification(error.message);
