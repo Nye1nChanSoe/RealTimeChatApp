@@ -1,9 +1,18 @@
 import PropTypes from 'prop-types';
 import { diffForHumans } from '../helpers';
 import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLastConversastionContext } from '../contexts/RememberLastConversationContext';
 
 const Conversation = ({ chat }) => {
   const {conversationId} = useParams();
+  const {setConversationID} = useLastConversastionContext();
+
+  useEffect(() => {
+    if(conversationId) {
+      setConversationID(conversationId);
+    }
+  }, [conversationId])
 
   return (
     <div 

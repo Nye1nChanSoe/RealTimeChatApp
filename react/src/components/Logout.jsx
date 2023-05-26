@@ -3,10 +3,12 @@ import { useAuthContext } from '../contexts/AuthContext';
 import axiosClient from '../axios-client';
 import { Navigate } from 'react-router-dom';
 import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
+import { useLastConversastionContext } from '../contexts/RememberLastConversationContext';
 
 const Logout = () => {
   const {token, setToken, setUser} = useAuthContext();
   const {addError} = useErrorHandlingContext();
+  const {setConversationID} = useLastConversastionContext();
 
   if(!token) {
     return <Navigate to='/login' />
@@ -19,6 +21,7 @@ const Logout = () => {
       await axiosClient.post('/logout');
       setUser(null);
       setToken(null);
+      setConversationID(null);
     } catch(error) {
       addError(error.message);
       console.error('Error: ', error);
