@@ -1,14 +1,14 @@
 import { RouterProvider } from 'react-router-dom';
 import router from './router';
 import { AuthContextProvider } from './contexts/AuthContext';
-import { UtilityContextProvider } from './contexts/UtilityContext';
+import { ErrorHandlingContextProvider } from './contexts/ErrorHandlingContext';
 
 const App = () => {
   return (
     <AuthContextProvider>
-      <UtilityContextProvider>
+      <ErrorHandlingContextProvider>
         <RouterProvider router={ router } />
-      </UtilityContextProvider>
+      </ErrorHandlingContextProvider>
     </AuthContextProvider>
   );
 };

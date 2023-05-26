@@ -6,7 +6,7 @@ import axiosClient from '../axios-client';
 import { useParams } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 import { useMessageContext } from '../contexts/MessageContext';
-import { useUtilityContext } from '../contexts/UtilityContext';
+import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
 
 const MessageInput = () => {
   const {messages, setMessages} = useMessageContext();
@@ -16,11 +16,11 @@ const MessageInput = () => {
   const textAreaRef = useRef(null);
   const {conversationId} = useParams();
 
-  const {notification, setNotification} = useUtilityContext();
+  const {errors, addError} = useErrorHandlingContext();
 
   useEffect(() => {
     textAreaRef.current.focus();
-  }, [messages, notification]);
+  }, [messages, errors]);
 
   const handleSendMessage = async () => {
     const payload = {
@@ -36,9 +36,9 @@ const MessageInput = () => {
       setLoading(false);
     } catch(error) {
       if(error && error.response.status === 404) {
-        setNotification('Select a conversation to send messages');
+        addError('Select a conversation to send messages');
       } else {
-        setNotification(error.message);
+        addError(error.message);
       }
       setLoading(false);
     }

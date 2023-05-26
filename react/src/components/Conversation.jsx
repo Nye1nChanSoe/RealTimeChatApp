@@ -1,18 +1,9 @@
 import PropTypes from 'prop-types';
 import { diffForHumans } from '../helpers';
 import { useParams } from 'react-router-dom';
-import { useUtilityContext } from '../contexts/UtilityContext';
-import { useEffect } from 'react';
 
 const Conversation = ({ chat }) => {
   const {conversationId} = useParams();
-  const {setSelectedConversation} = useUtilityContext();
-
-  useEffect(() => {
-    if(conversationId) {
-      setSelectedConversation(conversationId);
-    }
-  }, [conversationId]);
 
   return (
     <div 

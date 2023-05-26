@@ -3,8 +3,8 @@ import { FadeLoader } from 'react-spinners';
 import axiosClient, { cancelPendingRequest } from '../axios-client';
 import Conversation from './Conversation';
 import { Link } from 'react-router-dom';
-import { useUtilityContext } from '../contexts/UtilityContext';
 import { isEqual } from 'lodash';
+import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
 
 const Conversations = () => {
   const [chats, setChats] = useState([]);
@@ -14,7 +14,7 @@ const Conversations = () => {
   const intervalIdRef = useRef(null);
   const cancelTokenSourceRef = useRef(null);
   const chatsRef = useRef([]);
-  const {setNotification} = useUtilityContext();
+  const {addError} = useErrorHandlingContext();
 
   useEffect(() => {
     initialize();
@@ -58,7 +58,7 @@ const Conversations = () => {
         chatsRef.current = data;
       }
     } catch(error) {
-      setNotification(error.message);
+      addError(error.message);
       console.log(error);
       setLoading(false);
     }
@@ -79,7 +79,7 @@ const Conversations = () => {
         }
       }
     } catch(error) {
-      setNotification(error.message);
+      addError(error.message);
       console.log(error);
     }
   };

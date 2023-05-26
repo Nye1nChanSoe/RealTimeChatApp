@@ -4,7 +4,8 @@ import Dropdown from './Dropdown';
 import { useMessageContext } from '../contexts/MessageContext';
 import axiosClient from '../axios-client';
 import { useParams } from 'react-router-dom';
-import { useUtilityContext } from '../contexts/UtilityContext';
+import { formatDateTime } from '../helpers';
+import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
 
 const MessageBubble = ({ message, isSelf }) => {
   const {messages, setMessages} = useMessageContext();
@@ -13,12 +14,14 @@ const MessageBubble = ({ message, isSelf }) => {
   const {conversationId} = useParams();
   const dropdownRef = useRef(null);
 
-  const left = 'flex justify-start';
-  const right = 'flex justify-end';
-  const selfMessage = `max-w-lg p-3 cursor-pointer my-1.5 bg-blue-500 text-white rounded-xl`;
-  const otherMessage = 'max-w-lg p-3 cursor-pointer my-1.5 bg-gray-100 text-black rounded-xl';
+  const left = 'flex flex-row justify-start items-center gap-x-4 my-1.5';
+  const right = 'flex flex-row justify-end items-center gap-x-4 my-1.5';
+  const selfMessage = 'max-w-xl p-3 cursor-pointer bg-blue-500 text-white rounded-xl';
+  const otherMessage = 'max-w-xl p-3 cursor-pointer bg-gray-100 text-black rounded-xl';
+  const selfMessageTime = 'order-first text-xs text-gray-500';
+  const otherMessageTime = 'text-xs text-gray-500';
 
-  const {setNotification} = useUtilityContext();
+  const {addError} = useErrorHandlingContext();
 
   useEffect(() => {
     document.addEventListener('click', onClickOutside);
@@ -33,7 +36,7 @@ const MessageBubble = ({ message, isSelf }) => {
       await axiosClient.delete(`/conversations/${conversationId}/messages/${message.message_id}`);
       setMessages(messages.filter((msg) => msg.message_id !== message.message_id));
     } catch(error) {
-      setNotification(error.message);
+      addError(error.message);
       console.log(error);
     }
   };
@@ -61,6 +64,7 @@ const MessageBubble = ({ message, isSelf }) => {
         >
           { message.content }
         </p>
+        <span className={ isSelf ? selfMessageTime : otherMessageTime }>{ formatDateTime(message.updated_at) }</span>
       </div>
       {
         showDropdown

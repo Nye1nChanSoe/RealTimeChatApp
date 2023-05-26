@@ -4,19 +4,20 @@ import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
 import ChatHeader from "./ChatHeader";
 import { PuffLoader } from 'react-spinners';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMessageContext } from "../contexts/MessageContext";
-import { useUtilityContext } from "../contexts/UtilityContext";
 import { isEqual } from 'lodash';
+import { useErrorHandlingContext } from "../contexts/ErrorHandlingContext";
 
 const Messages = () => {
   const {messages, setMessages} = useMessageContext();
-  const {setNotification} = useUtilityContext();
+  const {addError} = useErrorHandlingContext();
   const [participants, setParticipants] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
 
   const {conversationId} = useParams();
+  const navigate = useNavigate();
 
   const messagesRef = useRef([]);
   const intervalIdRef = useRef(null);
@@ -77,12 +78,12 @@ const Messages = () => {
         }
       }
     } catch(error) {
-      console.log(error);
       const {response} = error;
       if(response && response.status === 404) {
-        setNotification(response.data.message);
+        addError(response.data.message);
+        navigate('/chats');
       } else {
-        setNotification(error.message);
+        addError(error.message);
       }
     }
   };
@@ -105,9 +106,12 @@ const Messages = () => {
       console.log(error);
       const {response} = error;
       if(response && response.status === 404) {
-        setNotification(response.data.message);
+        addError(response.data.message);
+        setLoading(false);
+        setIsEmpty(true);
+        navigate('/chats');
       } else {
-        setNotification(error.message);
+        addError(error.message);
       }
     }
   };

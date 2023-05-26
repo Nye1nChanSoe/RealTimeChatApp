@@ -1,12 +1,12 @@
 import { HiOutlineLogout } from 'react-icons/hi';
 import { useAuthContext } from '../contexts/AuthContext';
-import { useUtilityContext } from '../contexts/UtilityContext';
 import axiosClient from '../axios-client';
 import { Navigate } from 'react-router-dom';
+import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
 
 const Logout = () => {
   const {token, setToken, setUser} = useAuthContext();
-  const {setNotification, setSelectedConversation} = useUtilityContext();
+  const {addError} = useErrorHandlingContext();
 
   if(!token) {
     return <Navigate to='/login' />
@@ -19,9 +19,8 @@ const Logout = () => {
       await axiosClient.post('/logout');
       setUser(null);
       setToken(null);
-      setSelectedConversation(null);
     } catch(error) {
-      setNotification(error.message);
+      addError(error.message);
       console.error('Error: ', error);
     }
   };
