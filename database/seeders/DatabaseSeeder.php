@@ -58,32 +58,26 @@ class DatabaseSeeder extends Seeder
             'messages' => [
                 [
                     'user_id' => 3,
-                    'conversation_id' => 1,
                     'content' => 'I have some ideas for the upcoming project. Can we meet tomorrow to discuss?'
                 ],
                 [
                     'user_id' => 1,
-                    'conversation_id' => 1,
                     'content' => 'Sure, let\'s meet in the conference room at 10 AM. Is that convenient for you?'
                 ],
                 [
                     'user_id' => 3,
-                    'conversation_id' => 1,
                     'content' => 'I have a conflicting meeting at that time. Can we reschedule for the afternoon?'
                 ],
                 [
                     'user_id' => 1,
-                    'conversation_id' => 1,
                     'content' => 'Afternoon works for me. How about 2 PM?'
                 ],
                 [
                     'user_id' => 3,
-                    'conversation_id' => 1,
                     'content' => '2 PM works for me too. Let\'s meet in the conference room then.'
                 ],
                 [
                     'user_id' => 1,
-                    'conversation_id' => 1,
                     'content' => 'Great! I\'ll update the calendar invite accordingly.'
                 ],
             ],

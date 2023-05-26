@@ -11,7 +11,7 @@ return new class extends Migration
         // Stores the messages exchanged in conversations
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('conversation_id');
+            $table->uuid('conversation_id');
             $table->foreignId('user_id');
             $table->text('content');
             $table->timestamps();

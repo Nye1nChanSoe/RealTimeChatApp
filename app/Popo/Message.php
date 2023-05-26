@@ -6,17 +6,17 @@ use Carbon\Carbon;
 
 class Message
 {
-    private int $id;
+    private int|string $id;
     private string $content;
-    private int $conversation_id;
+    private int|string $conversation_id;
 
     private Carbon $created_at;
     private Carbon $updated_at;
 
     /**
-     * @param int $id
+     * @param int|string $id
      * @param string $content
-     * @param int $conversation_id
+     * @param int|string $conversation_id
      * @param Carbon $created_at
      * @param Carbon $updated_at
      */
@@ -30,15 +30,15 @@ class Message
     }
 
     /**
-     * @return int
+     * @return int|string
      */
-    public function getId(): int
+    public function getId(): int|string
     {
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param int|string $id
      */
     public function setId($id)
     {
@@ -62,15 +62,15 @@ class Message
     }
 
     /**
-     * @return int
+     * @return int|string
      */
-    public function getConversationId(): int
+    public function getConversationId(): int|string
     {
         return $this->conversation_id;
     }
 
     /**
-     * @param int $conversation_id
+     * @param int|string $conversation_id
      */
     public function setConversationId($conversation_id)
     {

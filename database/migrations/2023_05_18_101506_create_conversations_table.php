@@ -10,7 +10,7 @@ return new class extends Migration
     {
         // represents individual chat threads
         Schema::create('conversations', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignId('user_id');   // owner or admin of the chat
             $table->string('title');
             $table->text('last_message')->nullable();   // last message of each conversation

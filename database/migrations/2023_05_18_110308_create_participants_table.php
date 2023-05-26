@@ -11,8 +11,11 @@ return new class extends Migration
         // Bridge table linking 'users' and 'conversations' for the many to many rs
         Schema::create('participants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('conversation_id');
+            $table->uuid('conversation_id');
             $table->foreignId('user_id');
+
+            $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

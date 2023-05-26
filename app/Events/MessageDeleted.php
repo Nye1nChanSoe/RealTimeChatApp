@@ -22,9 +22,9 @@ class MessageDeleted
     public Message $message;
 
     /**
-     * @param int $id
+     * @param int|string $id
      * @param string $messageContent
-     * @param int $conversationId
+     * @param int|string $conversationId
      * @param Carbon $createdAt
      * @param Carbon $updatedAt
      */
