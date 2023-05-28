@@ -1,17 +1,9 @@
 import { useAuthContext } from '../contexts/AuthContext';
 import Logout from "../components/Logout";
-import axiosClient from "../axios-client";
-import { useEffect } from "react";
 import { HiOutlineUserCircle } from 'react-icons/hi';
 
 const Navigation = () => {
-  const {user, setUser} = useAuthContext();
-
-  useEffect(() => {
-    axiosClient.get('/user')
-      .then((res) => setUser(res.data))
-      .catch((err) => console.error(err));
-  }, []);
+  const {user} = useAuthContext();
 
   return (
     <nav className="flex justify-between items-center h-16 px-6 border-b gap-x-5">

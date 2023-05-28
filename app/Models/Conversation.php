@@ -23,11 +23,16 @@ class Conversation extends Model
      */
     public function setLastMessageAttribute($lastMessage)
     {
-        $this->attributes['last_message'] = Crypt::encryptString($lastMessage);
+        if($lastMessage) {
+            $this->attributes['last_message'] = Crypt::encryptString($lastMessage);
+        }
     }
     public function getLastMessageAttribute()
     {
-        return Crypt::decryptString($this->attributes['last_message']);
+        if($this->attributes['last_message'] ?? false) {
+            return Crypt::decryptString($this->attributes['last_message']);
+        }
+        return '';
     }
 
 

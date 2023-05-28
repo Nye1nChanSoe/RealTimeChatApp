@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class ConversationWithParticipantsResource extends JsonResource
 {
@@ -15,6 +16,12 @@ class ConversationWithParticipantsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $participants = $this->users()
+            ->where('users.id', '<>', auth()->id())
+            ->get();
+
+        Log::info($participants);
+
         return [
             'conversation_id' => (string)$this->id,
             'conversation' => [
@@ -24,7 +31,7 @@ class ConversationWithParticipantsResource extends JsonResource
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at
             ],
-            'participants' => UserResource::collection($this->users)
+            'participants' => $participants
         ];
     }
 }

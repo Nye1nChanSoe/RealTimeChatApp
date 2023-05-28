@@ -85,8 +85,8 @@ const Conversations = () => {
   };
 
   return (
-    <div className='w-full'>
-      <div className='px-6 pb-4'>
+    <div className='w-full overflow-y-auto' style={{ height: 'calc(100vh - 144px)' }}>
+      <div className='px-6 py-4 bg-white sticky top-0'>
         {/* search */}
         <input type="search" placeholder="Search..." className='border px-2 py-2 w-full rounded-lg' />
       </div>

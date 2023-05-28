@@ -14,6 +14,7 @@ return new class extends Migration
             $table->uuid('conversation_id');
             $table->foreignId('user_id');
 
+            $table->unique(['conversation_id', 'user_id']);
             $table->foreign('conversation_id')->references('id')->on('conversations')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

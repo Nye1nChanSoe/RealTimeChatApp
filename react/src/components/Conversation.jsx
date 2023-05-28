@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { diffForHumans } from '../helpers';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLastConversastionContext } from '../contexts/RememberLastConversationContext';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const Conversation = ({ chat }) => {
   const {conversationId} = useParams();
@@ -12,7 +13,7 @@ const Conversation = ({ chat }) => {
     if(conversationId) {
       setConversationID(conversationId);
     }
-  }, [conversationId])
+  }, [conversationId]);
 
   return (
     <div 
@@ -24,10 +25,9 @@ const Conversation = ({ chat }) => {
       </div>
       <div className='flex-1 overflow-hidden'>
         <h1 className='font-semibold text-base truncate mb-1'>
-          {/* slice(1) to cut out the first participant AKA auth user name */}
-          { chat.participants.slice(1).map((person) => `${person.firstname} ${person.lastname}`).join(', ') }
+          { chat.participants.map((person) => `${person.firstname} ${person.lastname}`).join(', ') }
         </h1>
-        <p className='truncate'>{ chat.conversation.last_message }</p>
+        <p className='truncate'>{ chat.conversation.last_message ? chat.conversation.last_message : 'Start chatting now!' }</p>
       </div>
       <div className='self-center w-14 text-right'>
         <time className='text-gray-500 text-xs'>{ diffForHumans(chat.conversation.updated_at) }</time>

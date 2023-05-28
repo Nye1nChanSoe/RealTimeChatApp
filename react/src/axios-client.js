@@ -17,22 +17,22 @@ axiosClient.interceptors.request.use((config) => {
 
 axiosClient.interceptors.response.use((response) => {
   return response;
-}, (reject) => {
+}, (error) => {
   try {
-    if(axios.isCancel(reject)) {
+    if(axios.isCancel(error)) {
       return;
     }
     // destructure the actual response coming from the server
-    const {response} = reject;
+    const {response} = error;
     // if the user is unauthorized, or if the token is invalid for some reason
     if(response.status === 401) {
       localStorage.removeItem(import.meta.env.VITE_API_TOKEN_KEY);
     }
-  } catch(error) {
-    console.error('Axios Error: ', error);
+  } catch(err) {
+    console.error('Axios Error: ', err);
   }
 
-  throw reject;
+  throw error;
 });
 
 export const cancelPendingRequest = () => axios.CancelToken.source();

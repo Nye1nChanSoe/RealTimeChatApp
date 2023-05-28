@@ -15,6 +15,7 @@ const Messages = () => {
   const [participants, setParticipants] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [isNew, setIsNew] = useState(false);
 
   const {conversationId} = useParams();
   const navigate = useNavigate();
@@ -73,7 +74,11 @@ const Messages = () => {
         // only update the messages if it fetched messages are different from previous messages
         if(!isEqual(data, messagesRef.current)) {
           setMessages(data);
-          setIsEmpty(!data.length);
+          if(conversationId && data.length === 0) {
+            setIsNew(true);
+          } else {
+            setIsEmpty(!data.length);
+          }
           messagesRef.current = data;
         }
       }
@@ -81,7 +86,7 @@ const Messages = () => {
       const {response} = error;
       if(response && response.status === 404) {
         addError(response.data.message);
-        navigate('/chats');
+        return navigate('/chats');
       } else {
         addError(error.message);
       }
@@ -98,8 +103,11 @@ const Messages = () => {
       if(res) {
         const {data} = res.data;
         setMessages(data);
-        // console.log(data);
-        setIsEmpty(data.length === 0);
+        if(conversationId && data.length === 0) {
+          setIsNew(true);
+        } else {
+          setIsEmpty(!data.length);
+        }
         messagesRef.current = data;
       }
     } catch(error) {
@@ -118,13 +126,13 @@ const Messages = () => {
 
   const fetchParticipants = async () => {
     try {
-      const res = await axiosClient.get(`/conversations/${conversationId}/participants`, {
+      const res = await axiosClient.get(`/conversations/${conversationId}`, {
         cancelToken: cancelTokenSourceRef.current.token,
       });
       if(res) {
         const {data} = res.data;
         // console.log(data);
-        setParticipants(data.participants);
+        setParticipants(data.participants.map((person) => person.firstname + ' ' + person.lastname));
         setLoading(false);
       }
     } catch(error) {
@@ -133,12 +141,27 @@ const Messages = () => {
     }
   };
 
+  const handleSendMessage = async () => {
+    const payload = {
+      'content': `Hello!, ${participants}`,
+    };
+    try {
+      setIsNew(false);
+      setIsEmpty(false);
+      const res = await axiosClient.post(`/conversations/${conversationId}/messages`, payload);
+      const {data} = res.data;
+      setMessages([data]);
+    } catch(error) {
+      addError(error.message);
+    }
+  }
+
   return (
     <div>
       <div
         ref={ messagesContainerRef } 
         className="overflow-y-auto scroll-smooth"
-        style={{ height: 'calc(100vh - 96px)' }}
+        style={{ height: 'calc(100vh - 176px)' }}
       >
         {
           !loading &&
@@ -156,9 +179,14 @@ const Messages = () => {
         }
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           {/* if it's not loading (done initializing) and still got empty result */}
-          { (!loading && isEmpty) && 
+          { (!loading && isEmpty && !isNew) && 
             <div className="flex flex-col items-center gap-y-2">
               <p className="text-gray-500">Select a conversation</p>
+            </div>
+          }
+          { (!loading && isEmpty && isNew) && 
+            <div className="flex flex-col items-center gap-y-2">
+              <p className="text-black bg-slate-50 p-4 cursor-pointer rounded-lg hover:bg-slate-100" onClick={ handleSendMessage }>Say Hello to {participants}</p>
             </div>
           }
 

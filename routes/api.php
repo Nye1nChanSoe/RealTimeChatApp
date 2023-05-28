@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\UserController;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,4 +33,5 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::apiResource('/conversations', ConversationController::class);
     Route::get('/conversations/{conversation}/participants', [ConversationController::class, 'participants']);
     Route::apiResource('/conversations/{conversation:id}/messages', MessageController::class);
+    Route::apiResource('/users', UserController::class);
 });

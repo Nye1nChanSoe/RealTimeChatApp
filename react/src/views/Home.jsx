@@ -5,6 +5,7 @@ import Navigation from '../components/Navigation';
 import { MessageContextProvider } from '../contexts/MessageContext';
 import { useLastConversastionContext } from '../contexts/RememberLastConversationContext';
 import { useEffect } from 'react';
+import Users from '../components/Users';
 
 const Home = () => {
   const {conversationId} = useParams();
@@ -24,8 +25,9 @@ const Home = () => {
 
   return (
     <div className='flex flex-col h-screen'>
+      <Users />
       <div className='flex'>
-        <aside className='relative w-[350px] py-4 border-x'>
+        <aside className='relative w-[350px] border-x'>
           <Conversations />
           <div className='absolute bottom-0 left-0 right-0 border-t'>
             <Navigation />
