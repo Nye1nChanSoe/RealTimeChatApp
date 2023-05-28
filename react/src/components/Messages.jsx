@@ -132,7 +132,7 @@ const Messages = () => {
       if(res) {
         const {data} = res.data;
         // console.log(data);
-        setParticipants(data.participants.map((person) => person.firstname + ' ' + person.lastname));
+        setParticipants(data.participants.map((person) => person.firstname + ' ' + person.lastname).join(', '));
         setLoading(false);
       }
     } catch(error) {

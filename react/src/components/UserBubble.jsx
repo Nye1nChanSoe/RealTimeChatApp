@@ -49,7 +49,7 @@ const UserBubble = ({ user }) => {
   };
 
   return (
-    <div className='relative flex flex-col items-center gap-y-1 w-20 h-16' onClick={ () => handleClick(user) } onMouseEnter={ showFullName } onMouseLeave={ hideFullName }>
+    <div className='shrink-0 relative flex flex-col items-center justify-center gap-y-1 w-20 h-16' onClick={ () => handleClick(user) } onMouseEnter={ showFullName } onMouseLeave={ hideFullName }>
       {/* Profile image, name and status */}
       <div className='shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-100'>
         <img src="" alt="" />

@@ -108,7 +108,7 @@ const Conversations = () => {
           loading={loading}
           height={8}
           width={2}
-          margin={-6}
+          margin={-10}
           speedMultiplier={1.8}
           color='dodgerBlue'
         />
