@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import axiosClient, { cancelPendingRequest } from '../axios-client';
 import { useNavigate } from 'react-router-dom';
-import { isEqual } from 'lodash';
 
 const UserBubble = ({ user }) => {
   const [showName, setShowName] = useState(false);
   const navigate = useNavigate();
   const previousRequestRef = useRef();
-  const conversationRef = useRef();
 
   const handleClick = (user) => {
     createNewConversation(user);
@@ -51,8 +49,11 @@ const UserBubble = ({ user }) => {
   return (
     <div className='shrink-0 relative flex flex-col items-center justify-center gap-y-1 w-20 h-16' onClick={ () => handleClick(user) } onMouseEnter={ showFullName } onMouseLeave={ hideFullName }>
       {/* Profile image, name and status */}
-      <div className='shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-100'>
-        <img src="" alt="" />
+      <div className='relative'>
+        <div className='shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-100'>
+          <img src="" alt="" />
+        </div>
+        <div className={`absolute bottom-0 right-0 w-2.5 h-2.5 ${ user.status === 'active' ? 'bg-green-400' : '' } rounded-full z-10`}></div>
       </div>
       <div className='w-full'>
         <p className='text-sm text-center truncate'>{user.firstname}</p>

@@ -10,7 +10,6 @@ use App\Http\Requests\StoreMessageRequest;
 use App\Http\Requests\UpdateMessageRequest;
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Serve for the messages and other related data for a "conversation" component

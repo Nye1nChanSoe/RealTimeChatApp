@@ -9,7 +9,6 @@ use App\Http\Requests\UpdateConversationRequest;
 use App\Http\Resources\ConversationWithParticipantsResource;
 use App\Http\Resources\ParticipantResource;
 use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Log;
 
 class ConversationController extends Controller
 {

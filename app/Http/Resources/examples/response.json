@@ -17,6 +17,7 @@
                 {
                     "message_id": "1",
                     "sender": "Nyein Chan Soe",
+                    "type": "self",
                     "content": "Hi there",
                     "created_at": "2023-05-20 11:51:11",
                     "updated_at": "2023-05-20 11:51:11"
@@ -24,6 +25,7 @@
                 {
                     "message_id": "2",
                     "sender": "John Doe",
+                    "type": "other",
                     "content": "Hi man, how you doing?",
                     "created_at": "2023-05-20 11:52:00",
                     "updated_at": "2023-05-20 11:52:00"
@@ -31,6 +33,7 @@
                 {
                     "message_id": "3",
                     "sender": "John Doe",
+                    "type": "other",
                     "content": "It's been a long time!",
                     "created_at": "2023-05-20 11:52:15",
                     "updated_at": "2023-05-20 11:52:15"
@@ -38,6 +41,7 @@
                 {
                     "message_id": "4",
                     "sender": "Nyein Chan Soe",
+                    "type": "self",
                     "content": "Yeah, I am fine, what about you? Are you coming to the party?",
                     "created_at": "2023-05-20 11:53:01",
                     "updated_at": "2023-05-20 11:53:01"

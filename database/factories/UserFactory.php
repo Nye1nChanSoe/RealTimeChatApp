@@ -10,6 +10,8 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+    protected $genders = ['male', 'female', 'other'];
+
     /**
      * Define the model's default state.
      *
@@ -25,6 +27,8 @@ class UserFactory extends Factory
             'lastname' => $lastname,
             'email' => $fullname . '@email.com',
             'email_verified_at' => now(),
+            'gender' => $this->genders[rand(0, 2)],
+            'status' => 'inactive',
             'password' => 'password123', // password
             'remember_token' => Str::random(10),
         ];

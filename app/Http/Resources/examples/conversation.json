@@ -8,6 +8,7 @@
                 "user_id": "1",
                 "firstname": "Nyein Chan",
                 "lastname": "Soe",
+                "status": "active",
                 "created_at": "2023-05-20 11:51:11",
                 "updated_at": "2023-05-20 11:51:11"
             },

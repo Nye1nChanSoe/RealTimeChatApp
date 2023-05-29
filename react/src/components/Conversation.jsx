@@ -20,8 +20,11 @@ const Conversation = ({ chat }) => {
       className={`flex items-center space-x-3 px-6 py-4 text-sm cursor-pointer
       ${ conversationId === chat.conversation_id ? 'bg-gray-50' : 'hover:bg-gray-200' }`}
     >
-      <div className='shrink-0 w-12 h-12 rounded-full overflow-hidden bg-gray-100'>
-        <img src="" alt="" />
+      <div className='relative'>
+        <div className='relative shrink-0 w-12 h-12 rounded-full overflow-hidden bg-gray-100'>
+          <img src="" alt="" />
+        </div>
+        <div className={`absolute bottom-0 right-1 w-2.5 h-2.5 ${ chat.participants[0].status === 'active' ? 'bg-green-400' : '' } rounded-full z-10`}></div>
       </div>
       <div className='flex-1 overflow-hidden'>
         <h1 className='font-semibold text-base truncate mb-1'>

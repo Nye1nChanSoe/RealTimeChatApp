@@ -1,22 +1,57 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axiosClient from '../axios-client';
 import UserBubble from "./UserBubble";
+import { isEqual } from 'lodash';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const usersRef = useRef();
+  const intervalRef = useRef();
+
   useEffect(() => {
-    fetchUsers();
+    initialize();
+    pollUsersUpdate();
+
+    return () => {
+      if(intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
   }, []);
 
+  const pollUsersUpdate = () => {
+    intervalRef.current = setInterval(() => {
+      fetchUsers();
+    }, 5000);
+  };
+
   const fetchUsers = async () => {
+    try {
+      const res = await axiosClient.get('/users');
+      if(res) {
+        const {data} = res.data;
+        if(!isEqual(data, usersRef.current)) {
+          setUsers(data);
+          usersRef.current = data;
+        }
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const initialize = async () => {
     setLoading(true);
     try {
       const res = await axiosClient.get('/users');
       if(res) {
         const {data} = res.data;
         setUsers(data);
+        usersRef.current = data;
+        setLoading(false);
       }
       setLoading(false);
     } catch (error) {
@@ -24,8 +59,6 @@ const Users = () => {
       setLoading(false);
     }
   };
-
-  // TODO: Polling here
 
   return (
     <div className="flex items-center gap-x-4 h-20 border border-y px-6 w-full">

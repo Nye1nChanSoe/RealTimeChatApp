@@ -13,7 +13,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true ;
     }
 
     /**
@@ -24,9 +24,10 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstname' => ['required', 'string', 'max:255'],
-            'lastname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', Rule::unique('users')->ignore(auth()->id())],
+            'firstname' => ['string', 'max:255'],
+            'lastname' => ['string', 'max:255'],
+            'email' => ['email', Rule::unique('users')->ignore(auth()->id())],
+            'status' => ['string'],
         ];
     }
 }

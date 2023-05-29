@@ -26,6 +26,8 @@ class AuthController extends Controller
         $user = Auth::user();
         $token = $user->createToken(str_replace(' ', '_', strtolower($user->firstname)).'_token')->plainTextToken;
 
+        $user->update(['status' => 'active']);
+
         return $this->success(compact('user', 'token'));
     }
 
@@ -37,6 +39,8 @@ class AuthController extends Controller
         $user = User::create($data);
         $token = $user->createToken(str_replace(' ', '_', strtolower($user->firstname)).'_token')->plainTextToken;
 
+        $user->update(['status' => 'active']);
+
         return $this->success(compact('user', 'token'));
     }
 
@@ -44,6 +48,7 @@ class AuthController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
+        $user->update(['status' => 'inactive']);
 
         /** @var $token */
         $token = $user->currentAccessToken();

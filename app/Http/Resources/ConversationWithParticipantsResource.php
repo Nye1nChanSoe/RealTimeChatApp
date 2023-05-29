@@ -20,7 +20,6 @@ class ConversationWithParticipantsResource extends JsonResource
             ->where('users.id', '<>', auth()->id())
             ->get();
 
-        Log::info($participants);
 
         return [
             'conversation_id' => (string)$this->id,
@@ -31,7 +30,7 @@ class ConversationWithParticipantsResource extends JsonResource
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at
             ],
-            'participants' => $participants
+            'participants' => UserResource::collection($participants),
         ];
     }
 }
