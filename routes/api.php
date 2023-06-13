@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ConversationController;
+use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Resources\UserResource;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +27,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return new UserResource($request->user());
 });
 
 /** Protected Resources */
@@ -34,4 +36,11 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/conversations/{conversation}/participants', [ConversationController::class, 'participants']);
     Route::apiResource('/conversations/{conversation:id}/messages', MessageController::class);
     Route::apiResource('/users', UserController::class);
+
 });
+
+/**
+ * Route to authenticate and sent files stored in a private storage as a response
+ * Will need to include Authorization token in the URL query parameter for authentication
+ */
+Route::get('/conversations/{conversation}/images/{image}', [ImageController::class, 'serve']);

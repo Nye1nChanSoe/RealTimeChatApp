@@ -6,9 +6,11 @@ import axiosClient from '../axios-client';
 import { useParams } from 'react-router-dom';
 import { formatDateTime } from '../helpers';
 import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const MessageBubble = ({ message, isSelf }) => {
   const {messages, setMessages} = useMessageContext();
+  const {token} = useAuthContext();
   const [showDropdown, setShowDropdown] = useState(false);
 
   const {conversationId} = useParams();
@@ -16,8 +18,13 @@ const MessageBubble = ({ message, isSelf }) => {
 
   const left = 'flex flex-row justify-start items-center gap-x-4 my-1.5';
   const right = 'flex flex-row justify-end items-center gap-x-4 my-1.5';
-  const selfMessage = 'max-w-xl p-3 cursor-pointer bg-blue-500 text-white rounded-xl';
-  const otherMessage = 'max-w-xl p-3 cursor-pointer bg-gray-100 text-black rounded-xl';
+
+  const selfMessage = 'max-w-lg p-3 cursor-pointer bg-blue-500 text-white rounded-xl';
+  const otherMessage = 'max-w-lg p-3 cursor-pointer bg-gray-100 text-black rounded-xl';
+
+  const selfImage = 'max-w-lg max-h-60 cursor-pointer';
+  const otherImage = 'max-w-lg max-h-60 cursor-pointer';
+
   const selfMessageTime = 'order-first text-xs text-gray-500';
   const otherMessageTime = 'text-xs text-gray-500';
 
@@ -58,12 +65,21 @@ const MessageBubble = ({ message, isSelf }) => {
   return (
     <div className='w-full px-6 relative'>
       <div className={ isSelf ? right : left }>
-        <p
-          onDoubleClick={ (e) => isSelf ? handleDropdown(e) : '' }
-          className={ isSelf ? selfMessage : otherMessage }
-        >
-          { message.content }
-        </p>
+        {
+          message.type === 'text'
+          ? <p
+              onDoubleClick={ (e) => isSelf ? handleDropdown(e) : '' }
+              className={ isSelf ? selfMessage : otherMessage }
+            >
+              { message.content }
+            </p>
+          : <div>
+              <img
+                src={`http://localhost:8000/api/conversations/${conversationId}/images/${message.content}/?token=${token}`}
+                className={ isSelf ? selfImage : otherImage }
+              />
+            </div>
+        }
         <span className={ isSelf ? selfMessageTime : otherMessageTime }>{ formatDateTime(message.updated_at) }</span>
       </div>
       {

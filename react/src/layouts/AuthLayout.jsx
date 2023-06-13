@@ -11,7 +11,7 @@ const AuthLayout = () => {
 
   useEffect(() => {
     axiosClient.get('/user')
-      .then((res) => setUser(res.data))
+      .then((res) => setUser(res.data.data))
       .catch((err) => console.error(err));
   }, []);
 
@@ -34,8 +34,8 @@ const AuthLayout = () => {
   const updateStatus = async () => {
     try {
       const payload = {status: 'inactive'};
-      await axiosClient.patch(`/users/${user.id}`, payload);
-      console.log(user.id);
+      await axiosClient.patch(`/users/${user.user_id}`, payload);
+      console.log(user.user_id);
     } catch (error) {
       console.error(error);
     }

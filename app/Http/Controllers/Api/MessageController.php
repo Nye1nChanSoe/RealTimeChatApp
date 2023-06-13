@@ -10,6 +10,7 @@ use App\Http\Requests\StoreMessageRequest;
 use App\Http\Requests\UpdateMessageRequest;
 use App\Http\Resources\MessageResource;
 use App\Models\Message;
+use App\Services\MessageService;
 
 /**
  * Serve for the messages and other related data for a "conversation" component
@@ -34,16 +35,23 @@ class MessageController extends Controller
         return MessageResource::collection($messages);
     }
 
-    public function store(Conversation $conversation, StoreMessageRequest $request)
+    public function store(Conversation $conversation, StoreMessageRequest $request, MessageService $messageService)
     {
         $data = $request->validated();
         $data['conversation_id'] = $conversation->id;
         $data['user_id'] = auth()->id();
 
-        $message = Message::create($data);
+        $message = $messageService->createMessage($data);
+        $image = $messageService->uploadImage($request->image, $message);
 
         // dispatch message event to trigger the corresponding event listener
-        event(new MessageCreated($message->id, $message->content, $conversation->id, $message->created_at, $message->updated_at));
+        event(new MessageCreated(
+            $message->id,
+            $image ? 'Sent an image' : $message->content,
+            $conversation->id,
+            $message->created_at,
+            $message->updated_at)
+        );
 
         return new MessageResource($message);
     }

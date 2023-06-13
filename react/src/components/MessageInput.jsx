@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 import { useMessageContext } from '../contexts/MessageContext';
 import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
+import ImageUpload from './ImageUpload';
 
 const MessageInput = () => {
   const {messages, setMessages} = useMessageContext();
@@ -94,7 +95,7 @@ const MessageInput = () => {
         </div>
 
         <div className='flex items-center px-5 gap-x-5'>
-          <HiOutlinePaperClip className='w-5 h-5'/>
+          <ImageUpload />
           <HiOutlineEmojiHappy className='w-5 h-5'/>
         </div>
       </div>

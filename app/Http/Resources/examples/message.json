@@ -1,8 +1,9 @@
 {
     "data": {
         "message_id": "1",
+        "sender_id": "1",
         "sender": "Nyein Chan Soe",
-        "type": "self",
+        "type": "text",
         "content": "Hi there",
         "created_at": "2023-05-20 11:51:11",
         "updated_at": "2023-05-20 11:51:11"

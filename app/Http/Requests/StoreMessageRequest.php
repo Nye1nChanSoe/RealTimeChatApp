@@ -23,6 +23,8 @@ class StoreMessageRequest extends FormRequest
     {
         return [
             'content' => ['required', 'string', 'max:5000'],
+
+            'image' => ['file', 'mimes:jpg,png,webp,jpeg', 'max:2048'], // Max 2MB File Size
         ];
     }
 }

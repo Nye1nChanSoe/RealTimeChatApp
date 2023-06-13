@@ -8,9 +8,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMessageContext } from "../contexts/MessageContext";
 import { isEqual } from 'lodash';
 import { useErrorHandlingContext } from "../contexts/ErrorHandlingContext";
+import {useAuthContext} from '../contexts/AuthContext';
 
 const Messages = () => {
   const {messages, setMessages} = useMessageContext();
+  const {user} = useAuthContext();
   const {addError} = useErrorHandlingContext();
   const [participants, setParticipants] = useState('');
   const [loading, setLoading] = useState(false);
@@ -171,9 +173,9 @@ const Messages = () => {
                 <MessageBubble
                 key={ index }
                 message={ msg }
-                isSelf={ msg.type === 'self' }
+                isSelf={ msg.sender_id === user.user_id }
                 />
-              ) 
+              )
             }
           </div>
         }

@@ -22,7 +22,9 @@ class UpdateMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['required', 'string', 'max:5000']
+            'content' => ['required', 'string', 'max:5000'],
+
+            'image' => ['file', 'mimes:jpg,png,webp,jpeg', 'max:2048'], // Max File Size 2MB
         ];
     }
 }
