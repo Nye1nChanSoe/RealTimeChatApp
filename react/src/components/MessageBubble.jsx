@@ -7,11 +7,13 @@ import { useParams } from 'react-router-dom';
 import { formatDateTime } from '../helpers';
 import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
 import { useAuthContext } from '../contexts/AuthContext';
+import FullScreenImage from './FullScreenImage';
 
 const MessageBubble = ({ message, isSelf }) => {
   const {messages, setMessages} = useMessageContext();
   const {token} = useAuthContext();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const {conversationId} = useParams();
   const dropdownRef = useRef(null);
@@ -22,11 +24,13 @@ const MessageBubble = ({ message, isSelf }) => {
   const selfMessage = 'max-w-lg p-3 cursor-pointer bg-blue-500 text-white rounded-xl';
   const otherMessage = 'max-w-lg p-3 cursor-pointer bg-gray-100 text-black rounded-xl';
 
-  const selfImage = 'max-w-lg max-h-60 cursor-pointer';
-  const otherImage = 'max-w-lg max-h-60 cursor-pointer';
+  const selfImage = 'max-w-lg max-h-60 cursor-pointer border rounded';
+  const otherImage = 'max-w-lg max-h-60 cursor-pointer border rounded';
 
   const selfMessageTime = 'order-first text-xs text-gray-500';
   const otherMessageTime = 'text-xs text-gray-500';
+
+  const imageSrc = `http://localhost:8000/api/conversations/${conversationId}/images/${message.content}/?token=${token}`;
 
   const {addError} = useErrorHandlingContext();
 
@@ -73,9 +77,11 @@ const MessageBubble = ({ message, isSelf }) => {
             >
               { message.content }
             </p>
-          : <div>
+          : <div
+              onClick={ () => setIsFullScreen(!isFullScreen) }
+            >
               <img
-                src={`http://localhost:8000/api/conversations/${conversationId}/images/${message.content}/?token=${token}`}
+                src={ imageSrc }
                 className={ isSelf ? selfImage : otherImage }
               />
             </div>
@@ -86,6 +92,9 @@ const MessageBubble = ({ message, isSelf }) => {
         showDropdown
         ? <Dropdown ref={ dropdownRef } position="right-6" items={ dropdownObject } />
         : ''
+      }
+      {
+        isFullScreen && <FullScreenImage isFullScreen={ isFullScreen } setIsFullScreen={ setIsFullScreen } imageSrc={ imageSrc } />
       }
     </div>
   );

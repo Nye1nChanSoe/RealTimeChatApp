@@ -6,7 +6,7 @@ import { useMessageContext } from '../contexts/MessageContext';
 import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
 
 const ImageUpload = () => {
-  const {setMessages} = useMessageContext();
+  const {messages, setMessages} = useMessageContext();
   const {addError} = useErrorHandlingContext();
   const {conversationId} = useParams();
   const inputFileRef = useRef();
@@ -33,8 +33,7 @@ const ImageUpload = () => {
       });
       if(res) {
         const {data} = res.data;
-        console.log(data);
-        // TODO: set messages
+        setMessages([...messages, data]);
       }
     } catch (error) {
       if(error && error.response.status === 422) {

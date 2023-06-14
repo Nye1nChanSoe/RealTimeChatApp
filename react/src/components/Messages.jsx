@@ -11,8 +11,8 @@ import { useErrorHandlingContext } from "../contexts/ErrorHandlingContext";
 import {useAuthContext} from '../contexts/AuthContext';
 
 const Messages = () => {
-  const {messages, setMessages} = useMessageContext();
-  const {user} = useAuthContext();
+  const {messages, setMessages, imageURLs} = useMessageContext();
+  const {user, token} = useAuthContext();
   const {addError} = useErrorHandlingContext();
   const [participants, setParticipants] = useState('');
   const [loading, setLoading] = useState(false);
@@ -76,6 +76,7 @@ const Messages = () => {
         // only update the messages if it fetched messages are different from previous messages
         if(!isEqual(data, messagesRef.current)) {
           setMessages(data);
+          storeImageURLArray(data);
           if(conversationId && data.length === 0) {
             setIsNew(true);
           } else {
@@ -105,6 +106,8 @@ const Messages = () => {
       if(res) {
         const {data} = res.data;
         setMessages(data);
+        storeImageURLArray(data);
+
         if(conversationId && data.length === 0) {
           setIsNew(true);
         } else {
@@ -124,6 +127,12 @@ const Messages = () => {
         addError(error.message);
       }
     }
+  };
+
+  const storeImageURLArray = (data) => {
+    imageURLs.current = data
+      .filter((msg) => msg.type === 'image')
+      .map((msg) => `http://localhost:8000/api/conversations/${conversationId}/images/${msg.content}/?token=${token}`);
   };
 
   const fetchParticipants = async () => {
@@ -171,9 +180,9 @@ const Messages = () => {
             <ChatHeader participants={ participants } />
             { messages.map((msg, index) =>
                 <MessageBubble
-                key={ index }
-                message={ msg }
-                isSelf={ msg.sender_id === user.user_id }
+                  key={ index }
+                  message={ msg }
+                  isSelf={ msg.sender_id === user.user_id }
                 />
               )
             }
