@@ -8,6 +8,7 @@ import { formatDateTime } from '../helpers';
 import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
 import { useAuthContext } from '../contexts/AuthContext';
 import FullScreenImage from './FullScreenImage';
+import parse from 'html-react-parser';
 
 const MessageBubble = ({ message, isSelf }) => {
   const {messages, setMessages} = useMessageContext();
@@ -30,6 +31,7 @@ const MessageBubble = ({ message, isSelf }) => {
   const selfMessageTime = 'order-first text-xs text-gray-500';
   const otherMessageTime = 'text-xs text-gray-500';
 
+  const urlRegex = /(http:\/\/|https:\/\/)?([a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+|localhost)(:[0-9]+)?(\/[^\s]*)?/;    // match with both http and https urls
   const imageSrc = `http://localhost:8000/api/conversations/${conversationId}/images/${message.content}/?token=${token}`;
 
   const {addError} = useErrorHandlingContext();
@@ -41,6 +43,11 @@ const MessageBubble = ({ message, isSelf }) => {
     }
   }, []);
 
+  const parseMessage = (message) => {
+    return parse(message.replace(urlRegex, (url) => {
+      return '<a href=' + url + ' target="_blank" rel="noopener noreferrer" class="underline">' + url + '</a>';
+    }));
+  };
   const onDelete = async (e) => {
     try {
       setShowDropdown(false);
@@ -75,10 +82,10 @@ const MessageBubble = ({ message, isSelf }) => {
               onDoubleClick={ (e) => isSelf ? handleDropdown(e) : '' }
               className={ isSelf ? selfMessage : otherMessage }
             >
-              { message.content }
+              { parseMessage(message.content) }
             </p>
           : <div
-              onClick={ () => setIsFullScreen(!isFullScreen) }
+              onClick={ () => setIsFullScreen(true) }
             >
               <img
                 src={ imageSrc }
@@ -94,7 +101,7 @@ const MessageBubble = ({ message, isSelf }) => {
         : ''
       }
       {
-        isFullScreen && <FullScreenImage isFullScreen={ isFullScreen } setIsFullScreen={ setIsFullScreen } imageSrc={ imageSrc } />
+        isFullScreen && <FullScreenImage setIsFullScreen={ setIsFullScreen } imageSrc={ imageSrc } isProfileImage={ false } />
       }
     </div>
   );
