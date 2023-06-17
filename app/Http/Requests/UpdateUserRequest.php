@@ -27,6 +27,7 @@ class UpdateUserRequest extends FormRequest
             'firstname' => ['string', 'max:255'],
             'lastname' => ['string', 'max:255'],
             'email' => ['email', Rule::unique('users')->ignore(auth()->id())],
+            'image' => ['file', 'mimes:jpg,png,jpeg,webp', 'max:1024'],
             'status' => ['string'],
         ];
     }

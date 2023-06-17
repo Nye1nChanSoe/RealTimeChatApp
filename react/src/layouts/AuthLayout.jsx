@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import ErrorResponse from '../components/ErrorResponse';
 import { useErrorHandlingContext } from "../contexts/ErrorHandlingContext";
 import { useAuthContext } from "../contexts/AuthContext";
@@ -7,7 +7,11 @@ import axiosClient from "../axios-client";
 
 const AuthLayout = () => {
   const {errors} = useErrorHandlingContext();
-  const {user, setUser} = useAuthContext();
+  const {user, setUser, token} = useAuthContext();
+
+  if(!token) {
+    return <Navigate to='/login' />
+  }
 
   useEffect(() => {
     axiosClient.get('/user')

@@ -36,7 +36,6 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/conversations/{conversation}/participants', [ConversationController::class, 'participants']);
     Route::apiResource('/conversations/{conversation:id}/messages', MessageController::class);
     Route::apiResource('/users', UserController::class);
-
 });
 
 /**
@@ -44,3 +43,4 @@ Route::middleware('auth:sanctum')->group(function() {
  * Will need to include Authorization token in the URL query parameter for authentication
  */
 Route::get('/conversations/{conversation}/images/{image}', [ImageController::class, 'serve']);
+Route::get('/images/{user}/profile', [UserController::class, 'serve']);
