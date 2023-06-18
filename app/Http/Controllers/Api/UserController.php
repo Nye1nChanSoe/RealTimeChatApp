@@ -42,19 +42,6 @@ class UserController extends Controller
         return response('', 204);
     }
 
-    public function serve(User $user, Request $request)
-    {
-        if(!$this->authenticate($request, $user)) {
-            return response()->json('Image not found', 404);
-        }
-
-        if(!Storage::exists($user->image)) {
-            return response()->json('Image not found', 404);
-        }
-
-        return Storage::response($user->image);
-    }
-
     /**
      * @param \Illuminate\Http\UploadedFile $file
      * @param string $path
@@ -71,29 +58,5 @@ class UserController extends Controller
         $file->storeAs($path, $name);
 
         return $path . '/' . $name;
-    }
-
-
-    private function authenticate($request, $authenticatedUser)
-    {
-        if(!$request->token) {
-            return false;
-        }
-
-        /** find the personal access token in the database   */
-        /** @var \Laravel\Sanctum\PersonalAccessToken $token */
-        $token = PersonalAccessToken::findToken($request->token);
-
-        if(!$token) {
-            return false;
-        }
-
-        $user = $token->tokenable;
-
-        if($authenticatedUser->id != $user->id) {
-            return false;
-        }
-
-        return true;
     }
 }

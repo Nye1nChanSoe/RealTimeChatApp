@@ -15,7 +15,7 @@ const Navigation = () => {
        * To ensure the latest image is displayed, apply a cache-busting mechanism to the image URL
        * Common way is to add a query param with a unique value, in this case v=unique_value
        */
-      setImageSrc(`http://localhost:8000/api/images/${user.user_id}/profile?token=${token}&v=${Math.random()}`);
+      setImageSrc(`${import.meta.env.VITE_API_BASE_URL}/api/images/${user.user_id}/profile?token=${token}&v=${Math.random()}`);
     }
   }, [user]);
 

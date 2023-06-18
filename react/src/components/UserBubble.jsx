@@ -2,11 +2,15 @@ import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import axiosClient, { cancelPendingRequest } from '../axios-client';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const UserBubble = ({ user }) => {
+  const { token } = useAuthContext();
   const [showName, setShowName] = useState(false);
   const navigate = useNavigate();
   const previousRequestRef = useRef();
+
+  const imageSrc = `${import.meta.env.VITE_API_BASE_URL}/api/images/${user.user_id}/profile?token=${token}`;
 
   const handleClick = (user) => {
     createNewConversation(user);
@@ -50,8 +54,8 @@ const UserBubble = ({ user }) => {
     <div className='shrink-0 relative flex flex-col items-center justify-center gap-y-1 w-20 h-16' onClick={ () => handleClick(user) } onMouseEnter={ showFullName } onMouseLeave={ hideFullName }>
       {/* Profile image, name and status */}
       <div className='relative'>
-        <div className='shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-100'>
-          <img src="" alt="" />
+        <div className='shrink-0 w-10 h-10 rounded-full border overflow-hidden flex items-center justify-center'>
+          <img src={ imageSrc } alt="" className='w-full h-full object-cover' />
         </div>
         <div className={`absolute bottom-0 right-0 w-2.5 h-2.5 ${ user.status === 'active' ? 'bg-green-400' : '' } rounded-full z-10`}></div>
       </div>

@@ -20,7 +20,6 @@ class ConversationWithParticipantsResource extends JsonResource
             ->where('users.id', '<>', auth()->id())
             ->get();
 
-
         return [
             'conversation_id' => (string)$this->id,
             'conversation' => [

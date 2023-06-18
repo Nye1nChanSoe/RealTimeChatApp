@@ -42,5 +42,5 @@ Route::middleware('auth:sanctum')->group(function() {
  * Route to authenticate and sent files stored in a private storage as a response
  * Will need to include Authorization token in the URL query parameter for authentication
  */
-Route::get('/conversations/{conversation}/images/{image}', [ImageController::class, 'serve']);
-Route::get('/images/{user}/profile', [UserController::class, 'serve']);
+Route::get('/conversations/{conversation}/images/{image}', [ImageController::class, 'serveConversations']);
+Route::get('/images/{user}/profile', [ImageController::class, 'serveProfiles']);

@@ -10,6 +10,8 @@ const Users = () => {
   const usersRef = useRef();
   const intervalRef = useRef();
 
+  const pollInterval = 7000;
+
   useEffect(() => {
     initialize();
     pollUsersUpdate();
@@ -24,7 +26,7 @@ const Users = () => {
   const pollUsersUpdate = () => {
     intervalRef.current = setInterval(() => {
       fetchUsers();
-    }, 5000);
+    }, pollInterval);
   };
 
   const fetchUsers = async () => {
@@ -67,10 +69,10 @@ const Users = () => {
           ? users.map((user, index) => <UserBubble key={index} user={user} />)
           : Array(12).fill().map((_, index) => 
               <div key={index} className='shrink-0 flex flex-col gap-y-2 items-center justify-center w-20 h-16'>
-                <div className='shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-100 animate-pulse'>
+                <div className='shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-200 animate-pulse'>
                   <img src="" alt="" />
                 </div>
-                <div className='w-2/3 h-2 rounded-lg bg-gray-100 animate-pulse'></div>
+                <div className='w-2/3 h-2 rounded-lg bg-gray-200 animate-pulse'></div>
               </div>
             )
       }

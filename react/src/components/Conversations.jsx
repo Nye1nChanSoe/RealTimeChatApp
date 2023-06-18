@@ -16,6 +16,8 @@ const Conversations = () => {
   const chatsRef = useRef([]);
   const {addError} = useErrorHandlingContext();
 
+  const pollInterval = 7000;
+
   useEffect(() => {
     initialize();
     pollConversationUpdates();
@@ -39,7 +41,7 @@ const Conversations = () => {
   const pollConversationUpdates =  () => {
     intervalIdRef.current = setInterval(() => {
       fetchConversations();
-    }, 5000);
+    }, pollInterval);
   };
 
   const initialize = async () => {

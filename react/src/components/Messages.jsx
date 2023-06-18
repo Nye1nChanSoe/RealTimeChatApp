@@ -14,7 +14,7 @@ const Messages = () => {
   const {messages, setMessages, imageURLs} = useMessageContext();
   const {user, token} = useAuthContext();
   const {addError} = useErrorHandlingContext();
-  const [participants, setParticipants] = useState('');
+  const [participants, setParticipants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
   const [isNew, setIsNew] = useState(false);
@@ -26,6 +26,8 @@ const Messages = () => {
   const intervalIdRef = useRef(null);
   const cancelTokenSourceRef = useRef(null);
   const messagesContainerRef = useRef(null);
+
+  const pollInterval = 5000; // poll every 5s
 
   useEffect(() => {
     setIsEmpty(true);
@@ -61,7 +63,7 @@ const Messages = () => {
     if(conversationId) {
       intervalIdRef.current = setInterval(() => {
         fetchMessages();
-      }, 5000);
+      }, pollInterval);
     }
   };
 
@@ -142,8 +144,7 @@ const Messages = () => {
       });
       if(res) {
         const {data} = res.data;
-        // console.log(data);
-        setParticipants(data.participants.map((person) => person.firstname + ' ' + person.lastname).join(', '));
+        setParticipants(data.participants);
         setLoading(false);
       }
     } catch(error) {
@@ -154,7 +155,7 @@ const Messages = () => {
 
   const handleSendMessage = async () => {
     const payload = {
-      'content': `Hello!, ${participants}`,
+      'content': `Hello!, ${participants.map((person) => person.firstname + ' ' + person.lastname).join(', ')}`,
     };
     try {
       setIsNew(false);
@@ -197,7 +198,7 @@ const Messages = () => {
           }
           { (!loading && isEmpty && isNew) && 
             <div className="flex flex-col items-center gap-y-2">
-              <p className="text-black bg-slate-50 p-4 cursor-pointer rounded-lg hover:bg-slate-100" onClick={ handleSendMessage }>Say Hello to {participants}</p>
+              <p className="text-black bg-slate-50 p-4 cursor-pointer rounded-lg hover:bg-slate-100" onClick={ handleSendMessage }>Say Hello to {participants.participants.map((person) => person.firstname + ' ' + person.lastname).join(', ')}</p>
             </div>
           }
 

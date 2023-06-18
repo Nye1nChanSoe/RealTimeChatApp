@@ -9,6 +9,9 @@ const Conversation = ({ chat }) => {
   const {conversationId} = useParams();
   const {setConversationID} = useLastConversastionContext();
 
+  const { token } = useAuthContext();
+  const imageSrc = `${import.meta.env.VITE_API_BASE_URL}/api/images/${chat.participants[0].user_id}/profile?token=${token}`;
+
   useEffect(() => {
     if(conversationId) {
       setConversationID(conversationId);
@@ -21,8 +24,8 @@ const Conversation = ({ chat }) => {
       ${ conversationId === chat.conversation_id ? 'bg-gray-50' : 'hover:bg-gray-200' }`}
     >
       <div className='relative'>
-        <div className='relative shrink-0 w-12 h-12 rounded-full border overflow-hidden'>
-          <img src="" alt="" />
+        <div className='relative shrink-0 flex items-center justify-center w-12 h-12 rounded-full border overflow-hidden'>
+          <img src={ imageSrc } alt="" className='w-full h-full object-cover' />
         </div>
         <div className={`absolute bottom-0 right-1 w-2.5 h-2.5 ${ chat.participants[0].status === 'active' ? 'bg-green-400' : '' } rounded-full z-10`}></div>
       </div>

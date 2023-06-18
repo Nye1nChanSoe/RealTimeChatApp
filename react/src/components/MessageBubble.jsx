@@ -32,7 +32,7 @@ const MessageBubble = ({ message, isSelf }) => {
   const otherMessageTime = 'text-xs text-gray-500';
 
   const urlRegex = /(http:\/\/|https:\/\/)?([a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+|localhost)(:[0-9]+)?(\/[^\s]*)?/;    // match with both http and https urls
-  const imageSrc = `http://localhost:8000/api/conversations/${conversationId}/images/${message.content}/?token=${token}`;
+  const imageSrc = `${import.meta.env.VITE_API_BASE_URL}/api/conversations/${conversationId}/images/${message.content}/?token=${token}`;
 
   const {addError} = useErrorHandlingContext();
 
