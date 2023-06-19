@@ -8,6 +8,8 @@
                 "user_id": "1",
                 "firstname": "Nyein Chan",
                 "lastname": "Soe",
+                "status": "active",
+                "email": "nyeinchansoe@email.com",
                 "created_at": "2023-05-20 11:51:11",
                 "updated_at": "2023-05-20 11:51:11"
             },
@@ -19,6 +21,7 @@
                     "firstname": "John",
                     "lastname": "Doe",
                     "status": "active",
+                    "email": "johndoe@email.com",
                     "created_at": "2023-05-20 11:51:11",
                     "updated_at": "2023-05-20 11:51:11"
                 }

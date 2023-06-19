@@ -58,6 +58,16 @@ class User extends Authenticatable
         return "{$this->firstname} {$this->lastname}";
     }
 
+    /** Local Scopes */
+    /**
+     * @param \Illuminate\Database\Query\Builder $query query builder instance to add additional constraints to the query
+     * @param string $term the search term
+     */
+    public function scopeSearch($query, $term)
+    {
+        $query->where('firstname', 'LIKE', "%{$term}%")
+            ->orWhere('lastname', 'LIKE', "%{$term}%");
+    }
 
     /** relations */
     public function conversations()

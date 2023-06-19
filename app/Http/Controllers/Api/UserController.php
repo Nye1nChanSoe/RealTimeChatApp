@@ -7,14 +7,16 @@ use App\Models\User;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if($request->search) {
+            $users = User::search($request->search)->get();
+            return UserResource::collection($users);
+        }
+
         $users = User::where('id', '<>', auth()->id())->get();
         return UserResource::collection($users);
     }

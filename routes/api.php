@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Resources\UserResource;
 use App\Models\Conversation;
@@ -36,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('/conversations/{conversation}/participants', [ConversationController::class, 'participants']);
     Route::apiResource('/conversations/{conversation:id}/messages', MessageController::class);
     Route::apiResource('/users', UserController::class);
+    Route::get('/search', [SearchController::class, 'search']);
 });
 
 /**

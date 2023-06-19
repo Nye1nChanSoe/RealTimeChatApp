@@ -9,7 +9,7 @@ const ChatHeader = ({ participants }) => {
   return (
     <header className='flex items-center justify-between h-20 sticky top-0 z-10 px-6 bg-white border-b shadow-sm'>
       {
-        participants.length > 0 && 
+        participants.length > 0 &&
         <>
         <div className='flex items-center gap-x-5'>
           <div className='shrink-0 w-12 h-12 overflow-hidden rounded-full border bg-gray-100'>

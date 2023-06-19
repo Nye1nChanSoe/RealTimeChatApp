@@ -198,7 +198,7 @@ const Messages = () => {
           }
           { (!loading && isEmpty && isNew) && 
             <div className="flex flex-col items-center gap-y-2">
-              <p className="text-black bg-slate-50 p-4 cursor-pointer rounded-lg hover:bg-slate-100" onClick={ handleSendMessage }>Say Hello to {participants.participants.map((person) => person.firstname + ' ' + person.lastname).join(', ')}</p>
+              <p className="text-black bg-slate-50 p-4 cursor-pointer rounded-lg hover:bg-slate-100" onClick={ handleSendMessage }>Say Hello to {participants.map((person) => person.firstname + ' ' + person.lastname).join(', ')}</p>
             </div>
           }
 

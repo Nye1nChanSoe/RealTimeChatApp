@@ -5,6 +5,7 @@ import Conversation from './Conversation';
 import { Link } from 'react-router-dom';
 import { isEqual } from 'lodash';
 import { useErrorHandlingContext } from '../contexts/ErrorHandlingContext';
+import Search from './Search';
 
 const Conversations = () => {
   const [chats, setChats] = useState([]);
@@ -88,9 +89,9 @@ const Conversations = () => {
 
   return (
     <div className='w-full overflow-y-auto' style={{ height: 'calc(100vh - 144px)' }}>
-      <div className='px-6 py-4 bg-white sticky top-0'>
+      <div className='flex items-center justify-center bg-white sticky top-0 h-20 w-full z-30'>
         {/* search */}
-        <input type="search" placeholder="Search..." className='border px-2 py-2 w-full rounded-lg' />
+        <Search />
       </div>
       <div>
         {
