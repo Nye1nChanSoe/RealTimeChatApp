@@ -16,6 +16,15 @@ const Conversation = ({ chat }) => {
     if(conversationId) {
       setConversationID(conversationId);
     }
+
+    const originalTitle = document.title;
+    if(conversationId === chat.conversation_id) {
+      document.title = chat.participants[0].firstname + ' ' + chat.participants[0].lastname;
+    }
+
+    return () => {
+      document.title = originalTitle;
+    }
   }, [conversationId]);
 
   return (
