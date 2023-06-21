@@ -4,9 +4,8 @@ import axiosClient, { cancelPendingRequest } from '../axios-client';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../contexts/AuthContext';
 
-const UserBubble = ({ user }) => {
+const UserC = ({ user }) => {
   const { token } = useAuthContext();
-  const [showName, setShowName] = useState(false);
   const navigate = useNavigate();
   const previousRequestRef = useRef();
 
@@ -42,39 +41,27 @@ const UserBubble = ({ user }) => {
     }
   };
 
-  const showFullName = () => {
-    setShowName(true);
-  };
-
-  const hideFullName = () => {
-    setShowName(false);
-  };
-
   return (
-    <div className='shrink-0 relative flex flex-col items-center justify-center gap-y-1 w-20 h-16' onClick={ () => handleClick(user) } onMouseEnter={ showFullName } onMouseLeave={ hideFullName }>
+    <div className='shrink-0 relative flex flex-col items-center justify-center gap-y-1 w-20 h-16'>
       {/* Profile image, name and status */}
       <div className='relative'>
-        <div className='shrink-0 w-10 h-10 rounded-full border overflow-hidden flex items-center justify-center'>
+        <div
+          onClick={ () => handleClick(user) }
+          className='shrink-0 w-10 h-10 rounded-full border overflow-hidden flex items-center justify-center hover:border-2 hover:border-blue-400'
+        >
           <img src={ imageSrc } alt="" className='w-full h-full object-cover' />
         </div>
         <div className={`absolute bottom-0 right-0 w-2.5 h-2.5 ${ user.status === 'active' ? 'bg-green-400' : '' } rounded-full z-10`}></div>
       </div>
       <div className='w-full'>
-        <p className='text-sm text-center truncate'>{user.firstname}</p>
+        <p onClick={ () => handleClick(user) } className='text-sm text-center truncate hover:text-blue-500'>{user.firstname}</p>
       </div>
-
-      {
-        showName &&
-        <div className='absolute -bottom-10 z-20 w-content'>
-          <p className='text-sm text-center bg-white p-2 drop-shadow-xl rounded-xl'>{user.firstname} {user.lastname}</p>
-        </div>
-      }
     </div>
   );
 };
 
-UserBubble.propTypes = {
+UserC.propTypes = {
   user: PropTypes.object.isRequired,
 };
 
-export default UserBubble;
+export default UserC;

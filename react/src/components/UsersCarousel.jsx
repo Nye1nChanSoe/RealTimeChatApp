@@ -3,9 +3,13 @@ import axiosClient from '../axios-client';
 import UserBubble from "./UserBubble";
 import { isEqual } from 'lodash';
 
-const Users = () => {
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+const UsersCarousel = () => {
   const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const usersRef = useRef();
   const intervalRef = useRef();
@@ -62,22 +66,44 @@ const Users = () => {
     }
   };
 
+  const settings = {
+    dots: false,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 4000,
+    draggable: true,
+    speed: 500,
+    slidesToShow: 12,
+    slidesToScroll: 1,
+  };
+
   return (
-    <div className="flex items-center gap-x-4 h-20 border border-y px-6 w-full">
+    <>
       {
-        !loading 
-          ? users.map((user, index) => <UserBubble key={index} user={user} />)
-          : Array(12).fill().map((_, index) => 
-              <div key={index} className='shrink-0 flex flex-col gap-y-2 items-center justify-center w-20 h-16'>
-                <div className='shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-200 animate-pulse'>
-                  <img src="" alt="" />
-                </div>
+      loading &&
+        <div className="flex items-center justify-between h-20 border border-y px-6 w-full">
+          {
+            Array(12).fill().map((_, index) =>
+              <div key={index} className='flex flex-col gap-y-2 items-center justify-center w-20 h-16'>
+                <div className='w-10 h-10 rounded-full overflow-hidden bg-gray-200 animate-pulse'></div>
                 <div className='w-2/3 h-2 rounded-lg bg-gray-200 animate-pulse'></div>
               </div>
             )
+          }
+        </div>
       }
-    </div>
+      {
+        !loading &&
+        <Slider {...settings} className="flex items-center h-20 border-y px-6 overflow-hidden">
+          {
+            users.map((user, index) =>
+              <UserBubble key={index} user={user} />
+            )
+          }
+        </Slider>
+      }
+    </>
   );
 }
 
-export default Users;
+export default UsersCarousel;
